@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, View } from 'react-native'
 import { router } from 'expo-router'
-import { Button, ButtonText } from '@/components/ui/button'
+import { Button, ButtonGroup, ButtonIcon, ButtonSpinner, ButtonText } from '@/components/ui/button'
 import { Text } from '@/components/ui/text'
 import { Input, InputField, InputIcon, InputSlot } from '@/components/ui/input'
 
@@ -20,9 +20,11 @@ export default function Login() {
             <Input variant="outline" size="md" isDisabled={false} isInvalid={false} isReadOnly={false}>
                 <InputField placeholder="Digite seua senha" type="password" />
             </Input>
-            <Button size='sm' variant='solid' onPress={handleLogin}>
-                <ButtonText>Login</ButtonText>
-            </Button>
+            <ButtonGroup>
+                <Button size='sm' variant='solid' onPress={handleLogin}>
+                    <ButtonText>Login</ButtonText>
+                </Button>
+            </ButtonGroup>
             <StatusBar style="auto" />
         </View>
     )
