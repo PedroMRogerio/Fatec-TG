@@ -1189,10 +1189,37 @@
   dependencies:
     tslib "^2.4.0"
 
+"@gluestack-ui/button@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@gluestack-ui/button/-/button-1.0.7.tgz#513c42b895f285b527969f7dde9abc7f622d7905"
+  integrity sha512-6hz5BPoB+iHMpDvys6AbIpeRPbnFiqyE3SnnbKPSCj8lgl3Dr9sFln41BvDmqmZ98d0usJluk50rz8pVNRZRgw==
+  dependencies:
+    "@gluestack-ui/utils" "0.1.13"
+    "@react-native-aria/focus" "^0.2.9"
+    "@react-native-aria/interactions" "0.2.13"
+
+"@gluestack-ui/form-control@^0.1.18":
+  version "0.1.18"
+  resolved "https://registry.yarnpkg.com/@gluestack-ui/form-control/-/form-control-0.1.18.tgz#68246259a805a15def61a174a29cf7bc15524f73"
+  integrity sha512-sVRdh5qZwZGddMiHTG0IHEEktO6iwgKFSoccjmK7P7U/shWt7xAdt5Hh2Rp7+2C/g02v76uFlycI+GhtbnwLGw==
+  dependencies:
+    "@gluestack-ui/utils" "^0.1.12"
+    "@react-native-aria/focus" "^0.2.9"
+
 "@gluestack-ui/hooks@0.1.11":
   version "0.1.11"
   resolved "https://registry.yarnpkg.com/@gluestack-ui/hooks/-/hooks-0.1.11.tgz#6b925d1dc4ac853cc24b0702e62b73224e375b7c"
   integrity sha512-bcBsF7bTo//JD6L9ekJu0rZs83qYD/pE/Uj3ih3OYEtGU0LDoYiGkBMmDRpVMcVv8bE3TCKivnhHaT/heafInA==
+
+"@gluestack-ui/input@^0.1.31":
+  version "0.1.31"
+  resolved "https://registry.yarnpkg.com/@gluestack-ui/input/-/input-0.1.31.tgz#6631bd5a67e489984323a00e0e02ce71c3dadda0"
+  integrity sha512-qunHYjHbuzafJhFaUHzDT28pjC7AgTUJ0jH//w53MLXmTCBDh7kEgqLt1Fxfh3/F7AAN2rLquiOOqdX14H6TOQ==
+  dependencies:
+    "@gluestack-ui/form-control" "^0.1.18"
+    "@gluestack-ui/utils" "^0.1.13"
+    "@react-native-aria/focus" "^0.2.9"
+    "@react-native-aria/interactions" "0.2.13"
 
 "@gluestack-ui/nativewind-utils@^1.0.23":
   version "1.0.23"
@@ -1240,7 +1267,7 @@
     "@gluestack-ui/utils" "^0.1.9"
     "@react-native-aria/focus" "^0.2.7"
 
-"@gluestack-ui/utils@^0.1.12", "@gluestack-ui/utils@^0.1.9":
+"@gluestack-ui/utils@0.1.13", "@gluestack-ui/utils@^0.1.12", "@gluestack-ui/utils@^0.1.13", "@gluestack-ui/utils@^0.1.9":
   version "0.1.13"
   resolved "https://registry.yarnpkg.com/@gluestack-ui/utils/-/utils-0.1.13.tgz#f3fb9013ef2ed3994c2b486a317203ccaceb210a"
   integrity sha512-L9+ddAn5FLtNJYut7KBGChelt+SvDW3C+6dXduZyP9DD1BoDVTRVwPVYblvbefZf2ZOdTALtHIIO3n/n1bWlbg==
