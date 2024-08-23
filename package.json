@@ -10,6 +10,7 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
+    "@expo/html-elements": "^0.10.1",
     "@gluestack-ui/button": "^1.0.7",
     "@gluestack-ui/input": "^0.1.31",
     "@gluestack-ui/link": "^0.1.22",
