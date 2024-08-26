@@ -8,6 +8,8 @@ import { Center } from '@/components/ui/center'
 import { Box } from '@/components/ui/box'
 import { VStack } from '@/components/ui/vstack'
 import { Heading } from '@/components/ui/heading'
+//import { Link } from '@/components/ui/link'
+
 
 
 export default function Login() {
@@ -19,7 +21,7 @@ export default function Login() {
     return (
         <View style={styles.container}>
             <Center>
-                <Box className='p-5 max-w-96 border border-background-300 rounded-lg'>
+                <Box className='p-5 max-w-96 border border-background-900 rounded-lg'>
                     <VStack className='pb-4' space='xs'>
                         <Heading className='leading-[30px]'>
                             Login
@@ -40,9 +42,9 @@ export default function Login() {
                         </Input>
                     </VStack>
                     <VStack space='lg' className='pt-4'>
-                        <Button size='sm'>
+                        <Button size='sm' variant="solid" onPress={handleLogin}>
                             <ButtonText>
-                                Submit
+                                Login
                             </ButtonText>
                         </Button>
                     </VStack>
