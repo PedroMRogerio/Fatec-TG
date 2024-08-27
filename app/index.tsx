@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { router } from 'expo-router';
-import { Button, ButtonText } from '@/components/ui/button';
+import React, { useState } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { router } from 'expo-router'
+import { Button, ButtonText } from '@/components/ui/button'
 import { Input, InputField, InputIcon, InputSlot } from '@/components/ui/input';
-import { Box } from '@/components/ui/box';
-import { Heading } from '@/components/ui/heading';
-import { EyeIcon, EyeOffIcon } from 'lucide-react-native';
+import { Box } from '@/components/ui/box'
+import { Heading } from '@/components/ui/heading'
+import { EyeIcon, EyeOffIcon } from 'lucide-react-native'
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
 
     const handlePasswordVisibility = () => {
-        setShowPassword(prevState => !prevState);
+        setShowPassword(prevState => !prevState)
     };
 
     const handleLogin = () => {
-        router.replace('home');
+        router.replace('home')
     };
 
     return (
@@ -42,7 +42,7 @@ export default function Login() {
                 </Box>
             </Box>
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -52,4 +52,4 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-});
+})
