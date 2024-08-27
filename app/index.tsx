@@ -20,7 +20,6 @@ export default function Login() {
 
     return (
         <View style={styles.container}>
-            <Center>
                 <Box className='p-5 max-w-96 border border-background-900 rounded-lg'>
                     <VStack className='pb-4' space='xs'>
                         <Heading className='leading-[30px]'>
@@ -49,7 +48,6 @@ export default function Login() {
                         </Button>
                     </VStack>
                 </Box>
-            </Center>
         </View>
     )
 }
