@@ -5313,6 +5313,11 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
+lucide-react-native@^0.436.0:
+  version "0.436.0"
+  resolved "https://registry.yarnpkg.com/lucide-react-native/-/lucide-react-native-0.436.0.tgz#6335742540b2f4f4442979056a8d106208b6260d"
+  integrity sha512-QTokIONu7WO8SNqFHMYbmHtzPIPdem9FfQdHjCXTKlPJGes1TFH2cKHyL8gdTdRtwEPpjwXGPDC5G179L4S+4Q==
+
 make-dir@^2.0.0, make-dir@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/make-dir/-/make-dir-2.1.0.tgz"
@@ -6526,7 +6531,7 @@ react-native-screens@3.31.1:
 
 react-native-svg@15.2.0:
   version "15.2.0"
-  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-15.2.0.tgz#9561a6b3bd6b44689f437ba13182afee33bd5557"
+  resolved "https://registry.npmjs.org/react-native-svg/-/react-native-svg-15.2.0.tgz"
   integrity sha512-R0E6IhcJfVLsL0lRmnUSm72QO+mTqcAOM5Jb8FVGxJqX3NfJMlMP0YyvcajZiaRR8CqQUpEoqrY25eyZb006kw==
   dependencies:
     css-select "^5.1.0"

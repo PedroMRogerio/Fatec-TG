@@ -12,6 +12,7 @@
   "dependencies": {
     "@expo/html-elements": "^0.10.1",
     "@gluestack-ui/button": "^1.0.7",
+    "@gluestack-ui/form-control": "^0.1.18",
     "@gluestack-ui/icon": "^0.1.22",
     "@gluestack-ui/input": "^0.1.31",
     "@gluestack-ui/link": "^0.1.22",
@@ -25,6 +26,7 @@
     "expo-linking": "~6.3.1",
     "expo-router": "~3.5.23",
     "expo-status-bar": "~1.12.1",
+    "lucide-react-native": "^0.436.0",
     "nativewind": "4.0.36",
     "react": "18.2.0",
     "react-dom": "18.2.0",
