@@ -11,17 +11,17 @@ export default function Home() {
         <View >
             <Text>Seja bem vindo Usuário!</Text>
             {/*Colocar o usuário como varáivel*/}
-            <Box style={telaPrincipal.container}>
+            <Box style={styles.container}>
                 <Link href='/usuario'>Usuário</Link>
                 <Link href='/novoFrete'>Novo Frete</Link>
                 <Link href='/configuracoes'>Configurações</Link>
-                <Link href='/'>Voltar para home</Link>
+                <Link href='/'>Sair</Link>
             </Box>
         </View>
     )
 }
 
-const telaPrincipal = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'row',
