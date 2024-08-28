@@ -1,11 +1,13 @@
+import { router } from "expo-router"
+import { View, StyleSheet } from "react-native"
 import { Box } from "@/components/ui/box"
 import { Button, ButtonText } from "@/components/ui/button"
 import { FormControl } from "@/components/ui/form-control"
 import { Input, InputField } from "@/components/ui/input"
 import { Link } from "@/components/ui/link"
 import { Text } from "@/components/ui/text"
-import { router } from "expo-router"
-import { View, StyleSheet, TouchableOpacity } from "react-native"
+import { Image } from "@/components/ui/image"
+import logoteste from './assets/logoteste.png'
 
 export default function Login() {
 
@@ -18,7 +20,10 @@ export default function Login() {
             <Text style={styles.text}>
                 Faça login em sua conta
             </Text>
+            <Image size="xl" source={logoteste} alt="logoteste"/>
+            {/*Tirar dúvidas sobre a importação de imagens*/}
             <Box style={styles.login}>
+            {/*Tirar dúvidas sobre a centralização de login*/}
                 <FormControl style={styles.formControl}>
                     <Text style={styles.formControlText}>Usuário</Text>
                     <Input style={styles.input}>
