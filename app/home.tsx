@@ -25,7 +25,7 @@ export default function Home() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#ffffff',
         padding: 20
     },
     contentContainer: {
@@ -48,6 +48,6 @@ const styles = StyleSheet.create({
     link: {
         marginHorizontal: 10,
         fontSize: 18,
-        color: '#007bff'
+        color: '#007BFF'
     }
 })

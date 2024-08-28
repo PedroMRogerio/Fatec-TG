@@ -1,45 +1,46 @@
-import React, { useState } from 'react'
-import { StyleSheet, View } from 'react-native'
-import { router } from 'expo-router'
-import { Button, ButtonText } from '@/components/ui/button'
-import { Input, InputField, InputIcon, InputSlot } from '@/components/ui/input';
-import { Box } from '@/components/ui/box'
-import { Heading } from '@/components/ui/heading'
-import { EyeIcon, EyeOffIcon } from 'lucide-react-native'
+import { Box } from "@/components/ui/box"
+import { Button, ButtonText } from "@/components/ui/button"
+import { FormControl } from "@/components/ui/form-control"
+import { Input, InputField } from "@/components/ui/input"
+import { Link } from "@/components/ui/link"
+import { Text } from "@/components/ui/text"
+import { router } from "expo-router"
+import { View, StyleSheet, TouchableOpacity } from "react-native"
 
 export default function Login() {
-    const [showPassword, setShowPassword] = useState(false);
-
-    const handlePasswordVisibility = () => {
-        setShowPassword(prevState => !prevState)
-    };
 
     const handleLogin = () => {
         router.replace('home')
-    };
+    }
 
     return (
         <View style={styles.container}>
-            <Box className='p-4 border rounded-lg border-outline-300'>
-                <Heading className='text-typography-900 leading-3'>Login</Heading>
-                <Box className='mt-4'>
-                    <Box className='mb-2'>
-                        <Input>
-                            <InputField placeholder="Insira o seu Login" className='py-2' type="text" />
-                        </Input>
-                    </Box>
-                    <Box className='mb-2'>
-                        <Input>
-                            <InputField placeholder="Insira a sua Senha" className='py-2' type={showPassword ? 'text' : 'password'} />
-                            <InputSlot className='pr-3' onPress={handlePasswordVisibility}>
-                                <InputIcon as={showPassword ? EyeIcon : EyeOffIcon} className='text-darkBlue-500' />
-                            </InputSlot>
-                        </Input>
-                    </Box>
-                    <Button className='ml-auto' onPress={handleLogin}>
-                        <ButtonText className='text-typography-0'>Login</ButtonText>
-                    </Button>
-                </Box>
+            <Text style={styles.text}>
+                Faça login em sua conta
+            </Text>
+            <Box style={styles.login}>
+                <FormControl style={styles.formControl}>
+                    <Text style={styles.formControlText}>Usuário</Text>
+                    <Input style={styles.input}>
+                        <InputField placeholder="Insira seu usuário"></InputField>
+                    </Input>
+                </FormControl>
+                <FormControl style={styles.formControl}>
+                    <Text style={styles.formControlText} >Senha</Text>
+                    <Input style={styles.input}>
+                        <InputField placeholder="Insira sua senha"></InputField>
+                    </Input>
+                </FormControl>
+                <Link style={styles.link} href=''> Esqueceu sua senha?</Link>
+            </Box>
+            <Button onPress={handleLogin}>
+                <ButtonText style={styles.button}>
+                    Entrar
+                </ButtonText>
+            </Button>
+            <View style={styles.spacer}/>
+            <Box style={styles.cadastro}>
+                <Link href=''>Ainda não tem sua conta? Cadastre-se agora</Link>
             </Box>
         </View>
     )
@@ -48,8 +49,57 @@ export default function Login() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center',
+        padding: 5,
+        justifyContent: 'center'
     },
+    login: {
+        alignItems: 'center',
+        backgroundColor: '#0000000'
+    },
+    text: {
+        fontFamily: "arial",
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#000000",
+        textAlign: "center",
+        marginTop: 5
+    },
+    formControl: {
+        marginTop: 5
+    },
+    formControlText: {
+        fontFamily: "arial"
+    },
+    input: {
+        fontFamily: "arial",
+        marginTop: 3,
+        width: 200,
+        height: 22,
+        backgroundColor: "#EEEEEE",
+        borderRadius: 5,
+        shadowRadius: 1
+    },
+    button: {
+        fontSize: 18,
+        marginTop: 10,
+        borderRadius: 5,
+        //borderWidth: 1,
+        shadowRadius: 1,
+        backgroundColor: "",
+        width: 80,
+        textAlign: 'center'
+    },
+    link: {
+        marginTop: 3,
+        fontFamily: 'arial',
+        fontSize: 12,
+        textAlign: 'center'
+    },
+    cadastro: {
+        alignItems: 'center'
+    },
+    spacer: {
+        flex: 1
+    }
 })
