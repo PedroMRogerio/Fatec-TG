@@ -1,5 +1,5 @@
 import { Link } from "expo-router";
-import { View, StyleSheet, Text, LogBox, Pressable } from "react-native";
+import { View, StyleSheet, Text, LogBox, Pressable, Dimensions } from "react-native";
 
 export default function Home() {
 
@@ -85,7 +85,7 @@ export const styles = StyleSheet.create({
     //Separador temporário até fazer o rodapé
     separador2: {
         width: '100%',
-        height: 240,
+        height: Dimensions.get('window').height*0.25
     },
     sublinha: {
         borderWidth: 0.25,
