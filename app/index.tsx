@@ -1,5 +1,5 @@
 import { Link } from "expo-router";
-import { Text, View, Image, TextInput, StyleSheet, Button, Pressable } from "react-native";
+import { Text, View, Image, TextInput, StyleSheet, Pressable } from "react-native";
 
 export default function Index() {
 
@@ -10,9 +10,9 @@ export default function Index() {
           alignSelf: 'center',
           height: 75, width: 75
         }} />
-      <Text style={styles.titulo}>Bem vindo! Faça o login para continuar</Text>
+      <Text style={styles.titulo}>Faça o login para continuar</Text>
       <Text style={styles.texto}>Login</Text>
-      <TextInput style={styles.input} placeholder="Insira seu Login" />
+      <TextInput style={styles.input} placeholder="Insira seu Login"/>
       <Text style={styles.texto}>Senha</Text>
       <TextInput style={styles.input} placeholder="Insira sua Senha" />
       <Link href="/home" asChild>
@@ -32,12 +32,14 @@ export const styles = StyleSheet.create({
   },
   titulo: {
     fontSize: 20,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontWeight: 'bold'
   },
   texto: {
     fontSize: 20,
     paddingBottom: 5,
-    paddingLeft: 10
+    paddingLeft: 10,
+    fontWeight: 'bold'
   },
   input: {
     alignSelf: 'center',
@@ -46,7 +48,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     paddingTop: 1,
     paddingLeft: 8,
-    backgroundColor: "#DBDBDB",
+    backgroundColor: "#E4E4E4",
   },
   botao: {
     paddingTop: 20,
@@ -58,7 +60,8 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     width: 75,
     backgroundColor: "#41ABE9",
-    borderRadius: 5
+    borderRadius: 5,
+    fontWeight: 'bold'
   }
 })
 
