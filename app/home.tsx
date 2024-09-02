@@ -10,17 +10,23 @@ export default function Home() {
             {/*Troca para o usuário dentro do banco dados*/}
             <View style={styles.sublinha}></View>
             <Text style={styles.subtitulo}>Ultimos fretes:</Text>
-            <View style={styles.box}>
-                <Text style={styles.frete}>Frete 1</Text>
-            </View>
+            <Link href="/frete1" asChild>
+                <Pressable style={styles.box}>
+                    <Text style={styles.frete}>Frete 1</Text>
+                </Pressable>
+            </Link>
             <View style={styles.separador}></View>
-            <View style={styles.box}>
-                <Text style={styles.frete}>Frete 2</Text>
-            </View>
+            <Link href="/frete2" asChild>
+                <Pressable style={styles.box}>
+                    <Text style={styles.frete}>Frete 2</Text>
+                </Pressable>
+            </Link>
             <View style={styles.separador}></View>
-            <View style={styles.box}>
-                <Text style={styles.frete}>Frete 3</Text>
-            </View>
+            <Link href="/frete3" asChild>
+                <Pressable style={styles.box}>
+                    <Text style={styles.frete}>Frete 3</Text>
+                </Pressable>
+            </Link>
             <View style={styles.separador2}></View>
             <View style={styles.view2}>
                 <Link href="/usuario" asChild>
