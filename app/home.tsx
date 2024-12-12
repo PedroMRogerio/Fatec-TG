@@ -44,6 +44,16 @@ export default function Home() {
                         <Text style={styles.textoBotoes}>Config.</Text>
                     </Pressable>
                 </Link>
+                <Link href="/teste-mapa" asChild>
+                    <Pressable style={styles.botoes}>
+                        <Text style={styles.textoBotoes}>Teste Mapa</Text>
+                    </Pressable>
+                </Link>
+                <Link href="/teste-mapa-2" asChild>
+                    <Pressable style={styles.botoes}>
+                        <Text style={styles.textoBotoes}>Teste Mapa 2</Text>
+                    </Pressable>
+                </Link>
             </View >
         </View >
     )
