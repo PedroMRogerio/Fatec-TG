@@ -12,8 +12,8 @@ export default function CurrentMaps({ location }: MapsProps) {
         <>
             <MapView
                 style={styles.map}
-                zoomEnabled={false}
-                scrollEnabled={false}
+                zoomEnabled={true}
+                scrollEnabled={true}
                 initialRegion={{
                     latitude: location.coords.latitude,
                     longitude: location.coords.longitude,
