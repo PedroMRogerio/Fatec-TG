@@ -4,28 +4,28 @@ import * as Location from 'expo-location';
 import CurrentMaps from '@/components/maps';
 
 export default function TesteMapa() {
-    const [location, setLocation] = useState<Location.LocationObject | null>(null);
-    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [location, setLocation] = useState<Location.LocationObject | null>(null)
+    const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
     useEffect(() => {
         (async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
+            let { status } = await Location.requestForegroundPermissionsAsync()
             if (status !== 'granted') {
-                setErrorMsg('Permissão de acesso à localização foi negada.');
-                return;
+                setErrorMsg('Permissão de acesso à localização foi negada.')
+                return
             }
 
-            let currentLocation = await Location.getCurrentPositionAsync({});
-            setLocation(currentLocation);
-        })();
-    }, []);
+            let currentLocation = await Location.getCurrentPositionAsync({})
+            setLocation(currentLocation)
+        })()
+    }, [])
 
     if (errorMsg) {
         return (
             <View style={styles.container}>
                 <Text style={styles.error}>{errorMsg}</Text>
             </View>
-        );
+        )
     }
 
     if (!location) {
@@ -34,14 +34,14 @@ export default function TesteMapa() {
                 <ActivityIndicator size="large" color="#0000ff" />
                 <Text>Carregando localização...</Text>
             </View>
-        );
+        )
     }
 
     return (
         <View style={styles.container}>
             <CurrentMaps location={location} />
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -56,4 +56,4 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center',
     },
-});
+})

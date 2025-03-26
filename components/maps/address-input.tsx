@@ -6,13 +6,13 @@ const apiKey = process.env.API_KEY
 
 type AddressInputProps = {
   onAddressSelected: (address: string, location: { lat: number; lng: number }) => void;
-};
+}
 
 const AddressInput: React.FC<AddressInputProps> = ({ onAddressSelected }) => {
   return (
     <View style={styles.container}>
       <GooglePlacesAutocomplete
-        placeholder="Digite um endereço..."
+        placeholder="Digite o endereço."
         fetchDetails={true}
         onPress={(data, details = null) => {
           if (details) {
@@ -25,15 +25,15 @@ const AddressInput: React.FC<AddressInputProps> = ({ onAddressSelected }) => {
         }}
         query={{
           key: apiKey,
-          language: "pt-BR", // Define o idioma
+          language: "pt-BR",
         }}
         styles={{
           textInput: styles.input,
         }}
       />
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -47,6 +47,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
   },
-});
+})
 
-export default AddressInput;
+export default AddressInput
