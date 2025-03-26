@@ -1,7 +1,10 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import MapView, { Marker, Polyline } from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
+import { pinStyles, trackStyles } from "./styles";
+
+// TRAÇADOR DE ROTA ORIGEM - DESTINO
 
 interface Coordinates {
   lat: number
@@ -28,10 +31,18 @@ const RouteMap: React.FC<RouteMapProps> = ({ origin, destination }) => {
         }}
       >
         {/* Marcador de Origem */}
-        <Marker coordinate={{ latitude: origin.lat, longitude: origin.lng }} title="Origem" />
+        <Marker 
+        coordinate={{ latitude: origin.lat, longitude: origin.lng }} 
+        title="Origem" 
+        pinColor={pinStyles.origin}
+        />
 
         {/* Marcador de Destino */}
-        <Marker coordinate={{ latitude: destination.lat, longitude: destination.lng }} title="Destino" />
+        <Marker 
+        coordinate={{ latitude: destination.lat, longitude: destination.lng }} 
+        title="Destino" 
+        pinColor={pinStyles.destiny}
+        />
 
         {/* Traçando a Rota */}
         <MapViewDirections
@@ -39,7 +50,7 @@ const RouteMap: React.FC<RouteMapProps> = ({ origin, destination }) => {
           destination={{ latitude: destination.lat, longitude: destination.lng }}
           apikey={GOOGLE_MAPS_API_KEY}
           strokeWidth={5}
-          strokeColor="blue"
+          strokeColor={trackStyles.history}
         />
       </MapView>
     </View>

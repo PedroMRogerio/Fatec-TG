@@ -52,7 +52,6 @@ export default function Home() {
             </View >
         </View >
     )
-
 }
 
 export const styles = StyleSheet.create({
