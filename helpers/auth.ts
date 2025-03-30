@@ -1,31 +1,29 @@
-import { GoogleAuthProvider, signInWithCredential } from "firebase/auth"
-import * as AuthSession from "expo-auth-session"
-import { auth } from "./firebaseConfig"
-import { makeRedirectUri } from "expo-auth-session"
+import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
+import * as AuthSession from "expo-auth-session";
+import * as Google from "expo-auth-session/providers/google";
+import { auth } from "./firebaseConfig";
+import { useEffect, useState } from "react";
+import { makeRedirectUri } from "expo-auth-session";
 
-const useProxy = true
-const redirectUri = makeRedirectUri({ useProxy })
 
-export async function signInWithGoogle() {
-  try {
-    const CLIENT_ID = "121687340902-a9t97uhbb7e5uvmpfor97f963qfjfk6s.apps.googleusercontent.com"
+export function useGoogleAuth() {
+  const [user, setUser] = useState<any>(null)
 
-    const discovery = {
-      authorizationEndpoint: "https://accounts.google.com/o/oauth2/auth",
-      tokenEndpoint: "https://oauth2.googleapis.com/token",
-    }
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    clientId: "121687340902-a9t97uhbb7e5uvmpfor97f963qfjfk6s.apps.googleusercontent.com",
+    redirectUri: makeRedirectUri(), 
+  })
 
-    const response = await AuthSession.startAsync({
-      authUrl: `${discovery.authorizationEndpoint}?client_id=${CLIENT_ID}&redirect_uri=${redirectUri}&response_type=id_token&scope=openid%20profile%20email`,
-    })
-
-    if (response.type === "success") {
+  useEffect(() => {
+    if (response?.type === "success") {
       const { id_token } = response.params
       const credential = GoogleAuthProvider.credential(id_token)
-      await signInWithCredential(auth, credential)
-      return auth.currentUser
+
+      signInWithCredential(auth, credential).then((userCredential) => {
+        setUser(userCredential.user)
+      })
     }
-  } catch (error) {
-    console.error("Erro ao autenticar com Google:", error)
-  }
+  }, [response])
+
+  return { user, promptAsync }
 }
