@@ -7,9 +7,9 @@ const firebaseConfig = {
   authDomain: "teste-fatec-native-paper-caio.firebaseapp.com",
   projectId: "teste-fatec-native-paper-caio",
   storageBucket: "teste-fatec-native-paper-caio.firebasestorage.app",
-  messagingSenderId: "121687340902",
-  appId: "1:121687340902:web:cee2df74d154513fb67aa7",
-  measurementId: "G-XC33KJJPVY"
+  messagingSenderId: process.env.SENDER_ID,
+  appId: process.env.APP_ID,
+  measurementId: process.env.MEASURE_ID
 }
 
 const app = initializeApp(firebaseConfig)
