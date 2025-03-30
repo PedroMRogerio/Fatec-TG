@@ -1,5 +1,5 @@
 import { Link } from "expo-router";
-import { View, StyleSheet, Text, LogBox, Pressable, Dimensions } from "react-native";
+import { View, StyleSheet, Text, Pressable, Dimensions } from "react-native";
 
 export default function Home() {
 
