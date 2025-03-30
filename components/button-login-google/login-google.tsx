@@ -1,15 +1,10 @@
-import { signInWithGoogle } from "@/helpers/auth";
+import { useGoogleAuth  } from "@/helpers/auth";
 import React, { useState } from "react";
 import { View, Button, Text, Image } from "react-native";
 
 
 export default function LoginGoogle() {
-  const [user, setUser] = useState<any>(null);
-
-  async function handleLogin() {
-    const userInfo = await signInWithGoogle();
-    setUser(userInfo);
-  }
+  const { user, promptAsync } = useGoogleAuth();
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -19,7 +14,7 @@ export default function LoginGoogle() {
           <Text>Bem-vindo, {user.displayName}</Text>
         </>
       ) : (
-        <Button title="Entrar com Google" onPress={handleLogin} />
+        <Button title="Entrar com Google" onPress={() => promptAsync()} />
       )}
     </View>
   );
