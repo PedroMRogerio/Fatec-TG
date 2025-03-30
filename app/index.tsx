@@ -1,3 +1,4 @@
+import LoginGoogle from "@/components/button-login-google/login-google";
 import { Link } from "expo-router";
 import { Text, View, Image, TextInput, StyleSheet, Pressable } from "react-native";
 
@@ -20,6 +21,7 @@ export default function Index() {
           <Text style={styles.textoBotao}>Entrar</Text>
         </Pressable>
       </Link>
+      <LoginGoogle/>
     </View>
   );
 }
