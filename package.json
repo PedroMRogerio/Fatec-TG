@@ -18,6 +18,7 @@
     "@expo/vector-icons": "^14.0.2",
     "@react-navigation/native": "^7.0.14",
     "@react-navigation/stack": "^7.2.3",
+    "axios": "^1.8.4",
     "expo": "^52.0.41",
     "expo-auth-session": "~6.0.3",
     "expo-constants": "~17.0.8",
