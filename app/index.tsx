@@ -1,5 +1,5 @@
 import { signIn } from "@/components/login-functions/login";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useRouter } from "expo-router";
 import { Text, View, Image, TextInput, StyleSheet, Pressable } from "react-native";
 
@@ -12,6 +12,7 @@ export default function Index() {
   const handleLogin = async () => {
     try {
       await signIn(email, password)
+      //console.log(process.env.EXPO_PUBLIC_FB_KEY)
       router.push('/home')
     } catch (e) {
       setError('Erro ao fazer login')
