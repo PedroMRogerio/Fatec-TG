@@ -47,7 +47,7 @@ export default function Index() {
           <Text style={styles.textoBotao}>Entrar</Text>
         </Pressable>
       </View>
-      <Link href="./criarusuario" asChild>
+      <Link href="./forgotPassword" asChild>
         <Pressable>
           <Text>Esqueci a senha!</Text>
         </Pressable>
