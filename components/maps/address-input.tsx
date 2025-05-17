@@ -4,7 +4,7 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 
 // INPUT COM AUXILIO DE AUTO PREENCHIMENTO DE ENDEREÇO
 
-const apiKey = process.env.API_KEY
+const apiKey = process.env.EXPO_PUBLIC_API_KEY
 
 type AddressInputProps = {
   onAddressSelected: (address: string, location: { lat: number; lng: number }) => void;

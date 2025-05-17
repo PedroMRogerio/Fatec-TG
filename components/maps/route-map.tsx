@@ -16,7 +16,7 @@ interface RouteMapProps {
   destination: Coordinates
 }
 
-const GOOGLE_MAPS_API_KEY = process.env.API_KEY? process.env.API_KEY : ''
+const GOOGLE_MAPS_API_KEY = process.env.EXPO_PUBLIC_API_KEY? process.env.EXPO_PUBLIC_API_KEY : ''
 
 const RouteMap: React.FC<RouteMapProps> = ({ origin, destination }) => {
   return (
