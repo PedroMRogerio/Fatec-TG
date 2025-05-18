@@ -2,6 +2,7 @@ import { signIn } from "@/components/login-functions/login";
 import React, { useState } from "react";
 import { Link, useRouter } from "expo-router";
 import { Text, View, Image, TextInput, StyleSheet, Pressable } from "react-native";
+import UserCliQuery from "@/components/firestore-query/userCli";
 
 export default function Index() {
   const [email, setEmail] = useState('')
@@ -9,7 +10,18 @@ export default function Index() {
   const [error, setError] = useState('')
   const router = useRouter()
 
-  const handleLogin = async () => {
+  const handleLoginClient = async () => {
+    try {
+      await signIn(email, password)
+      const user = await UserCliQuery.getUser(email)
+      console.log(user)
+      if (user !== null) router.push('/home')
+      else console.log('nao existe')
+    } catch (e) {
+      setError('Erro ao fazer login' + e)
+    }
+  }
+  const handleLoginProvider = async () => {
     try {
       await signIn(email, password)
       //console.log(process.env.EXPO_PUBLIC_FB_KEY)
@@ -18,6 +30,8 @@ export default function Index() {
       setError('Erro ao fazer login')
     }
   }
+
+
   return (
     <View style={styles.view}>
       <Image source={require('@/assets/images/teste.png')}
@@ -43,13 +57,18 @@ export default function Index() {
           secureTextEntry
         />
         {error && <Text>{error}</Text>}
-        <Pressable style={styles.botao} onPress={handleLogin}>
-          <Text style={styles.textoBotao}>Entrar</Text>
-        </Pressable>
+        <View style={{}}>
+          <Pressable style={styles.botao} onPress={handleLoginClient}>
+            <Text style={styles.textoBotao}>Entrar como Cliente</Text>
+          </Pressable>
+          <Pressable style={styles.botao} onPress={handleLoginProvider}>
+            <Text style={styles.textoBotao}>Entrar como Provedor</Text>
+          </Pressable>
+        </View>
       </View>
       <Link href="./forgotPassword" asChild>
         <Pressable>
-          <Text>Esqueci a senha!</Text>
+          <Text style={[styles.texto,{fontSize:15}]}>Esqueci a senha!</Text>
         </Pressable>
       </Link>
     </View>

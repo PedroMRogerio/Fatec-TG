@@ -1,16 +1,16 @@
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/helpers/firebaseConfig';
 
-const colRef = collection(db, 'UserCli')
+const colRef = collection(db, 'Frete')
 
 export default class UserCliQuery {
-    static async getUser(email: string) {
-        const q = email ? query(colRef, where('email', '==', email)) : colRef;
+    static async getFrete(userId: string) {
+        const q = query(colRef, where('userId', '==', userId))
         const querySnapshot = await getDocs(q)
-        const user = querySnapshot.docs.map(doc => ({
+        const fretes = querySnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
         }))
-        return user
+        return fretes
     }
 }

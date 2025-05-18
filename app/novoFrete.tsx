@@ -7,7 +7,7 @@ export default function NovoFrete() {
 
   async function Teste() {
     try {
-      const users = await UserCliQuery.getUsers('benga'); // Pode ser qualquer array
+      const users = await UserCliQuery.getUser('s'); // Pode ser qualquer array
       setUsersText(JSON.stringify(users, null, 2)); // Exibe o array completo formatado
     } catch (error) {
       setUsersText("Erro ao carregar usuários");
