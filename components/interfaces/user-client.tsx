@@ -1,6 +1,6 @@
-export interface UserClient {
+export interface IUserClient{
+    uid: string     //id firebase
     name: string
     email: string
-    password: string
     cpf: string
 }
