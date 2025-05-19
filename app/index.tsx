@@ -6,6 +6,10 @@ import UserCliQuery from "@/components/firestore-query/userCli";
 import UserProvQuery from "@/components/firestore-query/userProv";
 import { useUser } from "@/contexts/userContext";
 
+interface UserData {
+  [key: string]: any
+}
+
 export default function Index() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -16,13 +20,36 @@ export default function Index() {
   const handleLoginClient = async () => {
     try {
       const uid = await signIn(email, password);
-      const user = await UserCliQuery.getUser(uid);
+      let user = await UserCliQuery.getUser(uid);
 
       if (user) {
-        setUser({ uid, email, uType:'cli', ...user });
+        setUser({ uid, email, uType: 'cli', ...user });
         router.push('/home');
       } else {
-        //router.push('/create-user');
+        const provUser = await UserProvQuery.getUser(uid) as UserData
+        if (provUser) {
+          router.push({
+            pathname: '/criarusuario',
+            params: {
+              uid,
+              email,
+              name: provUser.name,
+              cpf: provUser.cpf,
+              cnh: provUser.cnh,
+              existingUType: 'prov',
+              targetUType: 'cli',
+            },
+          });
+        } else {
+          router.push({
+            pathname: '/criarusuario',
+            params: {
+              uid,
+              email,
+              targetUType: 'cli',
+            },
+          });
+        }
       }
     } catch (e: any) {
       setError('Erro ao fazer login: ' + e.message);
@@ -32,18 +59,42 @@ export default function Index() {
   const handleLoginProvider = async () => {
     try {
       const uid = await signIn(email, password);
-      const user = await UserProvQuery.getUser(uid);
+      let user = await UserProvQuery.getUser(uid);
 
       if (user) {
-        setUser({ uid, email, uType:'prov', ...user });
+        setUser({ uid, email, uType: 'prov', ...user });
         router.push('/home');
       } else {
-        //router.push('/create-user');
+        const cliUser = await UserCliQuery.getUser(uid) as UserData
+        if (cliUser) {
+          router.push({
+            pathname: '/criarusuario',
+            params: {
+              uid,
+              email,
+              name: cliUser.name,
+              cpf: cliUser.cpf,
+              cnh: cliUser.cnh,
+              existingUType: 'cli',
+              targetUType: 'prov',
+            },
+          });
+        } else {
+          router.push({
+            pathname: '/criarusuario',
+            params: {
+              uid,
+              email,
+              targetUType: 'prov',
+            },
+          });
+        }
       }
     } catch (e: any) {
       setError('Erro ao fazer login: ' + e.message);
     }
   };
+
 
   return (
     <View style={styles.view}>

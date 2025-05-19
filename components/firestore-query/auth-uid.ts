@@ -1,21 +1,21 @@
-import { useEffect, useState } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '@/helpers/firebaseConfig';
+import { useEffect, useState } from 'react'
+import { onAuthStateChanged } from 'firebase/auth'
+import { auth } from '@/helpers/firebaseConfig'
 
 export const useAuthUid = () => {
-  const [uid, setUid] = useState<string | null>(null);
+  const [uid, setUid] = useState<string | null>(null)
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUid(user.uid);
+        setUid(user.uid)
       } else {
-        setUid(null);
+        setUid(null)
       }
-    });
+    })
 
-    return () => unsubscribe(); // limpa o listener quando o componente desmontar
-  }, []);
+    return () => unsubscribe()
+  }, [])
 
-  return uid;
-};
+  return uid
+}

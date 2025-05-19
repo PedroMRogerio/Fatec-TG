@@ -1,8 +1,8 @@
 // firebaseConfig.ts ou firebase.ts
 
-import { getFirestore } from "firebase/firestore";
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { getFirestore } from "firebase/firestore"
+import { initializeApp } from 'firebase/app'
+import { getAuth } from 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FB_KEY,
@@ -12,9 +12,9 @@ const firebaseConfig = {
   messagingSenderId: process.env.EXPO_PUBLIC_SENDER_ID,
   appId: process.env.EXPO_PUBLIC_APP_ID,
   measurementId: process.env.EXPO_PUBLIC_MEASURE_ID
-};
+}
 
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig)
 
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+export const auth = getAuth(app)
+export const db = getFirestore(app)
