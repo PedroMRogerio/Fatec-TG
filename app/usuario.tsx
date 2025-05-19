@@ -1,30 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { useUser } from "@/contexts/userContext";
 import VehicleQuery from "@/components/firestore-query/vehicle";
-//import { IVehicle } from '@/components/interfaces/vehicle'
+import { useRouter } from "expo-router";
 
 interface IVehicle {
   id: string;
-  [key: string]: any; // permite campos extras
+  [key: string]: any;
 }
-
 
 export default function Usuario() {
   const { user } = useUser();
   const [vehicles, setVehicles] = useState<IVehicle[]>([]);
+  const router = useRouter();
 
-  function vType(type:string){
-    switch(type){
-        case 'large':
-            return 'Grande'
-        case 'medium':
-            return 'Médio'
-        case 'small':
-            return 'Pequeno'
-        default:
-            return '???'
-        
+  function vType(type: string) {
+    switch (type) {
+      case "large":
+        return "Grande";
+      case "medium":
+        return "Médio";
+      case "small":
+        return "Pequeno";
+      default:
+        return "???";
     }
   }
 
@@ -67,13 +66,22 @@ export default function Usuario() {
       <Text style={styles.subtitle}>Veículos</Text>
       {vehicles.length > 0 ? (
         vehicles.map((vehicle) => (
-          <View key={vehicle.id} style={styles.vehicleCard}>
+          <Pressable
+            key={vehicle.id}
+            style={styles.vehicleCard}
+            onPress={() =>
+              router.push({
+                pathname: "/editarVeiculo",
+                params: { ...vehicle },
+              })
+            }
+          >
             <Text style={styles.label}>Placa: <Text style={styles.value}>{vehicle.plate}</Text></Text>
             <Text style={styles.label}>Tipo: <Text style={styles.value}>{vType(vehicle.type)}</Text></Text>
             <Text style={styles.label}>Dimensão (m): <Text style={styles.value}>{vehicle.size}</Text></Text>
             <Text style={styles.label}>Preço Fixo: <Text style={styles.value}>{vehicle.fixedPrice.toFixed(2)}</Text></Text>
-            <Text style={styles.label}>Preço por Distância (Km): <Text style={styles.value}>{vehicle.variablePrice.toFixed(2)}</Text></Text>
-          </View>
+            <Text style={styles.label}>Preço por Km: <Text style={styles.value}>{vehicle.variablePrice.toFixed(2)}</Text></Text>
+          </Pressable>
         ))
       ) : (
         <Text style={styles.value}>Nenhum veículo encontrado.</Text>
@@ -100,6 +108,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   infoBlock: {
+    borderWidth: 0.3,
+    borderColor: '#808080',
     backgroundColor: "#f2f2f2",
     padding: 15,
     borderRadius: 8,
@@ -114,7 +124,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   vehicleCard: {
-    backgroundColor: "#e6e6e6",
+    borderWidth: 0.3,
+    borderColor: '#808080',
     padding: 12,
     borderRadius: 6,
     marginBottom: 10,
