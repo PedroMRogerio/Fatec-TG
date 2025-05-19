@@ -5,10 +5,14 @@ export interface IAddress{
 
 export interface IFrete{
     id: string
-    userId: string
+    uid: string
+    uidProv:string
     org: IAddress
     dst: IAddress
     date: Date
+    plate: string
+    type: string
+    size: string
     price: number
     crtDate: Date
 }
