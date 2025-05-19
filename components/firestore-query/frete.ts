@@ -3,7 +3,7 @@ import { db } from '@/helpers/firebaseConfig';
 
 const colRef = collection(db, 'Frete')
 
-export default class UserCliQuery {
+export default class FreteQuery {
     static async getFrete(uid: string) {
         const q = query(colRef, where('uid', '==', uid));
         const snapshot = await getDocs(q);

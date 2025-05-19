@@ -3,7 +3,7 @@ import { db } from '@/helpers/firebaseConfig';
 
 const colRef = collection(db, 'Vehicle');
 
-export default class UserCliQuery {
+export default class VehicleQuery {
     static async getVehicle(uid: string) {
         const q = query(colRef, where('uid', '==', uid));
         const snapshot = await getDocs(q);
