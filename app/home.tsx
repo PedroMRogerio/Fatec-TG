@@ -1,33 +1,43 @@
 import { Link } from "expo-router";
 import { View, StyleSheet, Text, Pressable, Dimensions } from "react-native";
+import { useUser } from "@/contexts/userContext";
 
 export default function Home() {
+    const { user } = useUser();
 
     return (
-
         <View style={styles.view}>
-            <Text style={styles.titulo}>Bem vindo Usuário!</Text>
-            {/*Troca para o usuário dentro do banco dados*/}
+            <Text style={styles.titulo}>
+                Bem vindo{user?.name ? `, ${user.name}` : ' Usuário'}!
+            </Text>
+
             <View style={styles.sublinha}></View>
-            <Text style={styles.subtitulo}>Ultimos fretes:</Text>
+            <Text style={styles.subtitulo}>Últimos fretes:</Text>
+
             <Link href="/frete1" asChild>
                 <Pressable style={styles.box}>
                     <Text style={styles.frete}>Frete 1</Text>
                 </Pressable>
             </Link>
+
             <View style={styles.separador}></View>
+
             <Link href="/frete2" asChild>
                 <Pressable style={styles.box}>
                     <Text style={styles.frete}>Frete 2</Text>
                 </Pressable>
             </Link>
+
             <View style={styles.separador}></View>
+
             <Link href="/frete3" asChild>
                 <Pressable style={styles.box}>
                     <Text style={styles.frete}>Frete 3</Text>
                 </Pressable>
             </Link>
+
             <View style={styles.separador2}></View>
+
             <View style={styles.view2}>
                 <Link href="/usuario" asChild>
                     <Pressable style={styles.botoes}>
@@ -49,10 +59,11 @@ export default function Home() {
                         <Text style={styles.textoBotoes}>Teste Mapa</Text>
                     </Pressable>
                 </Link>
-            </View >
-        </View >
-    )
+            </View>
+        </View>
+    );
 }
+
 
 export const styles = StyleSheet.create({
     view: {

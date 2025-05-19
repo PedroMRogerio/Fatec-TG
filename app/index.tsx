@@ -3,42 +3,51 @@ import React, { useState } from "react";
 import { Link, useRouter } from "expo-router";
 import { Text, View, Image, TextInput, StyleSheet, Pressable } from "react-native";
 import UserCliQuery from "@/components/firestore-query/userCli";
+import UserProvQuery from "@/components/firestore-query/userProv";
+import { useUser } from "@/contexts/userContext";
 
 export default function Index() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const router = useRouter()
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const router = useRouter();
+  const { setUser } = useUser();
 
   const handleLoginClient = async () => {
     try {
-      await signIn(email, password)
-      const user = await UserCliQuery.getUser(email)
-      console.log(user)
-      if (user !== null) router.push('/home')
-      else console.log('nao existe')
-    } catch (e) {
-      setError('Erro ao fazer login' + e)
+      const uid = await signIn(email, password);
+      const user = await UserCliQuery.getUser(uid);
+
+      if (user) {
+        setUser({ uid, email, ...user });
+        router.push('/home');
+      } else {
+        //router.push('/create-user');
+      }
+    } catch (e: any) {
+      setError('Erro ao fazer login: ' + e.message);
     }
-  }
+  };
+
   const handleLoginProvider = async () => {
     try {
-      await signIn(email, password)
-      //console.log(process.env.EXPO_PUBLIC_FB_KEY)
-      router.push('/home')
-    } catch (e) {
-      setError('Erro ao fazer login')
-    }
-  }
+      const uid = await signIn(email, password);
+      const user = await UserProvQuery.getUser(uid);
 
+      if (user) {
+        setUser({ uid, email, ...user });
+        router.push('/home');
+      } else {
+        //router.push('/create-user');
+      }
+    } catch (e: any) {
+      setError('Erro ao fazer login: ' + e.message);
+    }
+  };
 
   return (
     <View style={styles.view}>
-      <Image source={require('@/assets/images/teste.png')}
-        style={{
-          alignSelf: 'center',
-          height: 75, width: 75
-        }} />
+      <Image source={require('@/assets/images/teste.png')} style={{ alignSelf: 'center', height: 75, width: 75 }} />
       <View>
         <Text style={styles.titulo}>Faça o login para continuar</Text>
         <Text style={styles.texto}>Login</Text>
@@ -50,14 +59,15 @@ export default function Index() {
           keyboardType="email-address"
         />
         <Text style={styles.texto}>Senha</Text>
-        <TextInput style={styles.input}
+        <TextInput
+          style={styles.input}
           value={password}
           onChangeText={setPassword}
           placeholder="Senha"
           secureTextEntry
         />
-        {error && <Text>{error}</Text>}
-        <View style={{}}>
+        {error && <Text style={{ color: 'red', textAlign: 'center' }}>{error}</Text>}
+        <View>
           <Pressable style={styles.botao} onPress={handleLoginClient}>
             <Text style={styles.textoBotao}>Entrar como Cliente</Text>
           </Pressable>
@@ -68,7 +78,7 @@ export default function Index() {
       </View>
       <Link href="./forgotPassword" asChild>
         <Pressable>
-          <Text style={[styles.texto,{fontSize:15}]}>Esqueci a senha!</Text>
+          <Text style={[styles.texto, { fontSize: 15 }]}>Esqueci a senha!</Text>
         </Pressable>
       </Link>
     </View>
@@ -79,18 +89,18 @@ export const styles = StyleSheet.create({
   view: {
     flex: 1,
     justifyContent: 'center',
-    padding: 10
+    padding: 10,
   },
   titulo: {
     fontSize: 20,
     textAlign: 'center',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   texto: {
     fontSize: 20,
     paddingBottom: 5,
     paddingLeft: 10,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   input: {
     alignSelf: 'center',
@@ -103,7 +113,7 @@ export const styles = StyleSheet.create({
   },
   botao: {
     paddingTop: 20,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   textoBotao: {
     fontSize: 18,
@@ -111,8 +121,6 @@ export const styles = StyleSheet.create({
     width: 75,
     backgroundColor: "#41ABE9",
     borderRadius: 5,
-    fontWeight: 'bold'
-  }
-})
-
-
+    fontWeight: 'bold',
+  },
+});

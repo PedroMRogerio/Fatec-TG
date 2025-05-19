@@ -1,7 +1,7 @@
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/helpers/firebaseConfig';
 
-const colRef = collection(db, 'UserCli');
+const colRef = collection(db, 'UserProv');
 
 export default class UserCliQuery {
   static async getUser(uid: string) {

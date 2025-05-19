@@ -4,13 +4,16 @@ import { db } from '@/helpers/firebaseConfig';
 const colRef = collection(db, 'Frete')
 
 export default class UserCliQuery {
-    static async getFrete(userId: string) {
-        const q = query(colRef, where('userId', '==', userId))
-        const querySnapshot = await getDocs(q)
-        const fretes = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }))
-        return fretes
+    static async getFrete(uid: string) {
+        const q = query(colRef, where('uid', '==', uid));
+        const snapshot = await getDocs(q);
+    
+        if (snapshot.empty) return null;
+    
+        const doc = snapshot.docs[0];
+        return {
+          id: doc.id,
+          ...doc.data(),
+        };
+      }
     }
-}
