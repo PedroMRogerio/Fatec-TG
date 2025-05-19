@@ -54,11 +54,6 @@ export default function Home() {
                         <Text style={styles.textoBotoes}>Config.</Text>
                     </Pressable>
                 </Link>
-                <Link href="/teste-mapa" asChild>
-                    <Pressable style={styles.botoes}>
-                        <Text style={styles.textoBotoes}>Teste Mapa</Text>
-                    </Pressable>
-                </Link>
             </View>
         </View>
     );
