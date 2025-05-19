@@ -14,7 +14,7 @@ export default function Home() {
             <View style={styles.sublinha}></View>
             <Text style={styles.subtitulo}>Últimos fretes:</Text>
 
-            <Link href="/frete1" asChild>
+            <Link href="/home" asChild>
                 <Pressable style={styles.box}>
                     <Text style={styles.frete}>Frete 1</Text>
                 </Pressable>
@@ -22,7 +22,7 @@ export default function Home() {
 
             <View style={styles.separador}></View>
 
-            <Link href="/frete2" asChild>
+            <Link href="/home" asChild>
                 <Pressable style={styles.box}>
                     <Text style={styles.frete}>Frete 2</Text>
                 </Pressable>
@@ -30,7 +30,7 @@ export default function Home() {
 
             <View style={styles.separador}></View>
 
-            <Link href="/frete3" asChild>
+            <Link href="/home" asChild>
                 <Pressable style={styles.box}>
                     <Text style={styles.frete}>Frete 3</Text>
                 </Pressable>

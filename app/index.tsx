@@ -19,7 +19,7 @@ export default function Index() {
       const user = await UserCliQuery.getUser(uid);
 
       if (user) {
-        setUser({ uid, email, ...user });
+        setUser({ uid, email, uType:'cli', ...user });
         router.push('/home');
       } else {
         //router.push('/create-user');
@@ -35,7 +35,7 @@ export default function Index() {
       const user = await UserProvQuery.getUser(uid);
 
       if (user) {
-        setUser({ uid, email, ...user });
+        setUser({ uid, email, uType:'prov', ...user });
         router.push('/home');
       } else {
         //router.push('/create-user');

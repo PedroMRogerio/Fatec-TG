@@ -3,6 +3,7 @@ import React, { createContext, useState, useContext, ReactNode } from 'react';
 export type IUserContext = {
   uid: string;
   email: string | null;
+  uType: string
   [key: string]: any; // permite adicionar campos do Firestore dinamicamente
 };
 

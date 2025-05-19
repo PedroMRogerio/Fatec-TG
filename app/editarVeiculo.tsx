@@ -24,6 +24,17 @@ export default function EditarVeiculo() {
     variablePrice: parseFloat(variablePrice),
   });
 
+  const handleConfirmSave = () => {
+    Alert.alert(
+      "Confirmar alteração",
+      "Tem certeza que deseja salvar as alterações?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        { text: "Salvar", onPress: handleSave },
+      ]
+    );
+  };
+
   const handleSave = async () => {
     try {
       const ref = doc(db, "Vehicle", id);
@@ -86,8 +97,12 @@ export default function EditarVeiculo() {
         }
       />
 
-      <Pressable style={styles.button} onPress={handleSave}>
+      <Pressable style={styles.button} onPress={handleConfirmSave}>
         <Text style={styles.buttonText}>Salvar</Text>
+      </Pressable>
+
+      <Pressable style={styles.backButton} onPress={() => router.back()}>
+        <Text style={styles.backButtonText}>Voltar</Text>
       </Pressable>
     </View>
   );
@@ -140,5 +155,17 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  backButton: {
+    marginTop: 20,
+    padding: 12,
+    backgroundColor: "#ccc",
+    borderRadius: 6,
+    alignItems: "center",
+  },
+  backButtonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
   },
 });
