@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { signOutUser } from "@/components/login-functions/logout";
@@ -9,15 +9,20 @@ import { sendPasswordResetEmail } from "firebase/auth";
 export default function Config() {
   const router = useRouter();
   const { setUser } = useUser();
+  const [loading, setLoading] = useState(false)
 
   const handleSignOut = async () => {
+    if (loading) return;
+    setLoading(true);
     try {
       await signOutUser();
       setUser(null);
       router.replace("/");
     } catch (error) {
       Alert.alert("Erro", "Não foi possível deslogar.");
-    }
+    } finally{
+      setLoading(false)
+  }
   };
 
   const handlePasswordReset = async () => {
@@ -26,13 +31,16 @@ export default function Config() {
       Alert.alert("Erro", "Não foi possível obter o email do usuário.");
       return;
     }
-
+    if (loading) return;
+    setLoading(true);
     try {
       await sendPasswordResetEmail(auth, email);
       Alert.alert("Email enviado", "Verifique sua caixa de entrada para redefinir sua senha.");
     } catch (error) {
       Alert.alert("Erro", "Não foi possível enviar o email de redefinição.");
-    }
+    } finally{
+      setLoading(false)
+  }
   };
 
   return (

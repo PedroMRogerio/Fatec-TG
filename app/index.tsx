@@ -16,8 +16,11 @@ export default function Index() {
   const [error, setError] = useState('');
   const router = useRouter();
   const { setUser } = useUser();
+  const [loading, setLoading] = useState(false)
 
   const handleLoginClient = async () => {
+    if (loading) return;
+    setLoading(true);
     try {
       const uid = await signIn(email, password);
       let user = await UserCliQuery.getUser(uid);
@@ -53,10 +56,14 @@ export default function Index() {
       }
     } catch (e: any) {
       setError('Erro ao fazer login: ' + e.message);
+    } finally {
+      setLoading(false)
     }
   };
 
   const handleLoginProvider = async () => {
+    if (loading) return;
+    setLoading(true);
     try {
       const uid = await signIn(email, password);
       let user = await UserProvQuery.getUser(uid);
@@ -92,6 +99,8 @@ export default function Index() {
       }
     } catch (e: any) {
       setError('Erro ao fazer login: ' + e.message);
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -119,13 +128,16 @@ export default function Index() {
         />
         {error && <Text style={{ color: 'red', textAlign: 'center' }}>{error}</Text>}
         <View style={styles.buttonRow}>
-  <Pressable style={[styles.botao, styles.botaoFlex]} onPress={handleLoginClient}>
-    <Text style={styles.textoBotao}>Cliente</Text>
-  </Pressable>
-  <Pressable style={[styles.botao, styles.botaoFlex]} onPress={handleLoginProvider}>
-    <Text style={styles.textoBotao}>Provedor</Text>
-  </Pressable>
-</View>
+          <Pressable style={({ pressed }) => [styles.botaoFlex, pressed && { backgroundColor: "#ddd" }]} onPress={handleLoginClient}>
+            <Text style={[styles.textoBotao]}>Cliente</Text>
+          </Pressable>
+          <Pressable style={({ pressed }) => [
+            styles.botaoFlex,
+            pressed && { backgroundColor: "#ddd" }
+          ]} onPress={handleLoginProvider}>
+            <Text style={[styles.textoBotao]}>Provedor</Text>
+          </Pressable>
+        </View>
       </View>
       <Link href="./forgotPassword" asChild>
         <Pressable>
@@ -183,12 +195,12 @@ export const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingVertical: 10,
     alignItems: "center",
+
   },
   textoBotao: {
     fontSize: 18,
     textAlign: 'center',
     width: 75,
-    backgroundColor: "#fff",
     borderRadius: 5,
     fontWeight: 'bold',
   },

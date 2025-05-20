@@ -7,6 +7,7 @@ import { useRouter } from "expo-router";
 export default function esqueciSenha() {
   const [email, setEmail] = useState("");
   const router = useRouter();
+  const [loading, setLoading] = useState(false)
 
   const handlePasswordReset = async () => {
     if (!email) {
@@ -14,13 +15,17 @@ export default function esqueciSenha() {
       return;
     }
 
+    if (loading) return;
+    setLoading(true);
     try {
       await sendPasswordResetEmail(auth, email);
       Alert.alert("Sucesso", "Email de redefinição enviado. Verifique sua caixa de entrada.");
       router.replace("/");
     } catch (error: any) {
       Alert.alert("Erro", "Não foi possível enviar o email de redefinição.");
-    }
+    }  finally{
+      setLoading(false)
+  }
   };
 
   return (

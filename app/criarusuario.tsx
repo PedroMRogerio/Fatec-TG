@@ -5,6 +5,7 @@ import { newUserCli, newUserProv, NewUserCliProps, NewUserProvProps } from "@/co
 
 export default function CriarUsuario() {
     const { uid, email, existingUType, targetUType, name, cpf, cnh } = useLocalSearchParams()
+    const [loading, setLoading] = useState(false)
 
     const [formData, setFormData] = useState({
         uid: uid?.toString() || "",
@@ -25,42 +26,50 @@ export default function CriarUsuario() {
 
     const handleSubmit = async () => {
         if (targetUType === 'prov') {
-          if (formData.cpf === '' || formData.email === '' || formData.name === '' || cnhData.cnh === '' || formData.uid === '') {
-            alert('Todos os campos devem ser preenchidos!')
-          } else {
-            try {
-              await newUserProv({
-                uid: formData.uid,
-                cpf: formData.cpf,
-                email: formData.email,
-                name: formData.name,
-                cnh: cnhData.cnh,
-              })
-              alert("Provedor criado com sucesso!")
-              router.back()
-            } catch (e) {
-              alert("Erro ao criar provedor.")
+            if (formData.cpf === '' || formData.email === '' || formData.name === '' || cnhData.cnh === '' || formData.uid === '') {
+                alert('Todos os campos devem ser preenchidos!')
+            } else {
+                if (loading) return;
+                setLoading(true);
+                try {
+                    await newUserProv({
+                        uid: formData.uid,
+                        cpf: formData.cpf,
+                        email: formData.email,
+                        name: formData.name,
+                        cnh: cnhData.cnh,
+                    })
+                    alert("Provedor criado com sucesso!")
+                    router.back()
+                } catch (e) {
+                    alert("Erro ao criar provedor.")
+                } finally {
+                    setLoading(false)
+                }
             }
-          }
         } else {
-          if (formData.cpf === '' || formData.email === '' || formData.name === '' || formData.uid === '') {
-            alert('Todos os campos devem ser preenchidos!')
-          } else {
-            try {
-              await newUserCli({
-                uid: formData.uid,
-                cpf: formData.cpf,
-                email: formData.email,
-                name: formData.name,
-              })
-              alert("Cliente criado com sucesso!")
-              router.back()
-            } catch (e) {
-              alert("Erro ao criar cliente.")
+            if (formData.cpf === '' || formData.email === '' || formData.name === '' || formData.uid === '') {
+                alert('Todos os campos devem ser preenchidos!')
+            } else {
+                if (loading) return;
+                setLoading(true);
+                try {
+                    await newUserCli({
+                        uid: formData.uid,
+                        cpf: formData.cpf,
+                        email: formData.email,
+                        name: formData.name,
+                    })
+                    alert("Cliente criado com sucesso!")
+                    router.back()
+                } catch (e) {
+                    alert("Erro ao criar cliente.")
+                } finally {
+                    setLoading(false)
+                }
             }
-          }
         }
-      }
+    }
 
     return (
         <View style={styles.container}>
@@ -76,7 +85,7 @@ export default function CriarUsuario() {
 
             <Text style={styles.label}>Email</Text>
             <TextInput
-                style={[styles.input, {backgroundColor:'#ccc'}]}
+                style={[styles.input, { backgroundColor: '#ccc' }]}
                 value={formData.email}
                 editable={false}
                 placeholder="Digite seu email"
@@ -107,8 +116,8 @@ export default function CriarUsuario() {
                 <Text style={styles.backButtonText}>Cadastrar</Text>
             </Pressable>
             <Pressable style={styles.backButton} onPress={() => router.back()}>
-          <Text style={styles.backButtonText}>Voltar</Text>
-        </Pressable>
+                <Text style={styles.backButtonText}>Voltar</Text>
+            </Pressable>
         </View>
     )
 }

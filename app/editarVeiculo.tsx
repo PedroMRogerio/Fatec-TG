@@ -16,6 +16,7 @@ export default function EditarVeiculo() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const { id, plate, size, type, fixedPrice, variablePrice } = params as any;
+  const [loading, setLoading] = useState(false)
 
   const [form, setForm] = useState({
     size,
@@ -36,6 +37,8 @@ export default function EditarVeiculo() {
   };
 
   const handleSave = async () => {
+    if (loading) return;
+    setLoading(true);
     try {
       const ref = doc(db, "Vehicle", id);
       await updateDoc(ref, {
@@ -48,7 +51,9 @@ export default function EditarVeiculo() {
       router.back();
     } catch (error) {
       Alert.alert("Erro", "Falha ao atualizar veículo.");
-    }
+    } finally{
+      setLoading(false)
+  }
   };
 
   return (
