@@ -1,46 +1,66 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Pressable } from "react-native";
-import { router, useLocalSearchParams } from "expo-router";
+import React, { useState } from "react"
+import { View, Text, TextInput, StyleSheet, Pressable } from "react-native"
+import { router, useLocalSearchParams } from "expo-router"
+import { newUserCli, newUserProv, NewUserCliProps, NewUserProvProps } from "@/components/login-functions/create-user"
 
 export default function CriarUsuario() {
-    const { uid, email, existingUType, targetUType, name, cpf, cnh } = useLocalSearchParams();
+    const { uid, email, existingUType, targetUType, name, cpf, cnh } = useLocalSearchParams()
 
     const [formData, setFormData] = useState({
         uid: uid?.toString() || "",
         name: name?.toString() || "",
         email: email?.toString() || "",
         cpf: cpf?.toString() || "",
-    });
+    })
     const [cnhData, setCnhData] = useState({
         cnh: cnh?.toString() || ""
     })
 
     const handleChange = (field: string, value: string) => {
-        setFormData(prev => ({ ...prev, [field]: value }));
-    };
+        setFormData(prev => ({ ...prev, [field]: value }))
+    }
     const handleCnhChange = (field: string, value: string) => {
-        setCnhData(prev => ({ ...prev, [field]: value }));
-    };
+        setCnhData(prev => ({ ...prev, [field]: value }))
+    }
 
-    const handleSubmit = () => {
-        // Aqui você pode enviar formData para o Firestore
-        if (targetUType == 'prov') {
-            if (formData.cpf == '' || formData.email == '' || formData.name == '' || cnhData.cnh == '') {
-                alert('Todos os campos devem ser preenchidos!')
+    const handleSubmit = async () => {
+        if (targetUType === 'prov') {
+          if (formData.cpf === '' || formData.email === '' || formData.name === '' || cnhData.cnh === '' || formData.uid === '') {
+            alert('Todos os campos devem ser preenchidos!')
+          } else {
+            try {
+              await newUserProv({
+                uid: formData.uid,
+                cpf: formData.cpf,
+                email: formData.email,
+                name: formData.name,
+                cnh: cnhData.cnh,
+              })
+              alert("Provedor criado com sucesso!")
+              router.back()
+            } catch (e) {
+              alert("Erro ao criar provedor.")
             }
-            else {
-                console.log('INSERIR POST PARA O BD AQUI (PROVEDOR)')
+          }
+        } else {
+          if (formData.cpf === '' || formData.email === '' || formData.name === '' || formData.uid === '') {
+            alert('Todos os campos devem ser preenchidos!')
+          } else {
+            try {
+              await newUserCli({
+                uid: formData.uid,
+                cpf: formData.cpf,
+                email: formData.email,
+                name: formData.name,
+              })
+              alert("Cliente criado com sucesso!")
+              router.back()
+            } catch (e) {
+              alert("Erro ao criar cliente.")
             }
+          }
         }
-        else {
-            if (formData.cpf == '' || formData.email == '' || formData.name == '') {
-                alert('Todos os campos devem ser preenchidos!')
-            }
-            else {
-                console.log('INSERIR POST PARA O BD AQUI (CLIENTE)')
-            }
-        }
-    };
+      }
 
     return (
         <View style={styles.container}>
@@ -86,8 +106,11 @@ export default function CriarUsuario() {
             <Pressable style={styles.backButton} onPress={handleSubmit}>
                 <Text style={styles.backButtonText}>Cadastrar</Text>
             </Pressable>
+            <Pressable style={styles.backButton} onPress={() => router.back()}>
+          <Text style={styles.backButtonText}>Voltar</Text>
+        </Pressable>
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -132,4 +155,4 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#333",
     },
-});
+})
