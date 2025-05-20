@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable } from "react-native";
 import FreteQuery from "@/components/firestore-query/frete";
 import { Timestamp } from "firebase/firestore";
 import { Dimensions } from "react-native";
 import { getEndereco } from "@/components/maps/address-name"
+import { useRouter } from "expo-router";
 
 const { width, height } = Dimensions.get("window");
 //const minSize = Math.min(width, height);
+
 
 interface FreteItem {
     id: string;
@@ -21,12 +23,13 @@ interface FreteCardListProps {
 export default function FreteCardList({ uid }: FreteCardListProps) {
     const [fretes, setFretes] = useState<FreteItem[]>([]);
     const [loading, setLoading] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
         const fetchFretes = async () => {
             try {
                 const results = await FreteQuery.getFrete(uid);
-    
+
                 const fretesComEndereco = await Promise.all(
                     results.map(async (frete: FreteItem) => {
                         if (frete.dst && Array.isArray(frete.dst) && frete.dst.length >= 2) {
@@ -36,7 +39,7 @@ export default function FreteCardList({ uid }: FreteCardListProps) {
                         return { ...frete, endereco: "Coordenadas não disponíveis" };
                     })
                 );
-    
+
                 setFretes(fretesComEndereco);
             } catch (err) {
                 console.error("Erro ao buscar fretes:", err);
@@ -55,11 +58,18 @@ export default function FreteCardList({ uid }: FreteCardListProps) {
     return (
         <ScrollView contentContainerStyle={styles.container}>
             {fretes.map((frete) => (
-                <View key={frete.id} style={styles.card}>
-                    {/*<Text style={styles.title}>Frete ID: {frete.id}</Text>*/}
-                    <Text style={styles.title}>{frete.endereco}</Text>
-                    <Text style={styles.date}>{formatDate(frete.date ? frete.date : '')}</Text>
-                </View>
+                <Pressable key={frete.id} onPress={() =>
+                    router.push({
+                        pathname: "/frete-view",
+                        params: { ...frete },
+                    })
+                }>
+                    <View key={frete.id} style={styles.card}>
+                        {/*<Text style={styles.title}>Frete ID: {frete.id}</Text>*/}
+                        <Text style={styles.title}>{frete.endereco}</Text>
+                        <Text style={styles.date}>{formatDate(frete.date ? frete.date : '')}</Text>
+                    </View>
+                </Pressable>
             ))}
         </ScrollView>
     );
@@ -82,14 +92,14 @@ function formatDate(date: Timestamp | string): string {
 
 const styles = StyleSheet.create({
     container: {
-        width: width*1,
-        height:height*1,
+        width: width * 1,
+        height: height * 1,
         padding: 10,
     },
     card: {
         padding: 15,
-        width: width*0.90,
-        height: height*0.15,
+        width: width * 0.90,
+        height: height * 0.15,
         borderWidth: 0.85,
         borderRadius: 5,
         borderColor: '#808080',

@@ -1,4 +1,4 @@
-interface IEnd {
+export interface IEnd {
     lat: number
     lng: number
 }
