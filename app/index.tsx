@@ -118,18 +118,18 @@ export default function Index() {
           secureTextEntry
         />
         {error && <Text style={{ color: 'red', textAlign: 'center' }}>{error}</Text>}
-        <View>
-          <Pressable style={styles.botao} onPress={handleLoginClient}>
-            <Text style={styles.textoBotao}>Entrar como Cliente</Text>
-          </Pressable>
-          <Pressable style={styles.botao} onPress={handleLoginProvider}>
-            <Text style={styles.textoBotao}>Entrar como Provedor</Text>
-          </Pressable>
-        </View>
+        <View style={styles.buttonRow}>
+  <Pressable style={[styles.botao, styles.botaoFlex]} onPress={handleLoginClient}>
+    <Text style={styles.textoBotao}>Cliente</Text>
+  </Pressable>
+  <Pressable style={[styles.botao, styles.botaoFlex]} onPress={handleLoginProvider}>
+    <Text style={styles.textoBotao}>Provedor</Text>
+  </Pressable>
+</View>
       </View>
       <Link href="./forgotPassword" asChild>
         <Pressable>
-          <Text style={[styles.texto, { fontSize: 15 }]}>Esqueci a senha!</Text>
+          <Text style={[styles.texto, { fontSize: 15, marginTop: 30 }]}>Esqueci a senha!</Text>
         </Pressable>
       </Link>
     </View>
@@ -163,14 +163,32 @@ export const styles = StyleSheet.create({
     backgroundColor: "#E4E4E4",
   },
   botao: {
-    paddingTop: 20,
+    marginTop: 20,
     alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: "#ccc",
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+    paddingHorizontal: 20,
+  },
+  botaoFlex: {
+    flex: 1,
+    marginHorizontal: 5,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    backgroundColor: "#fff",
+    paddingVertical: 10,
+    alignItems: "center",
   },
   textoBotao: {
     fontSize: 18,
     textAlign: 'center',
     width: 75,
-    backgroundColor: "#41ABE9",
+    backgroundColor: "#fff",
     borderRadius: 5,
     fontWeight: 'bold',
   },
