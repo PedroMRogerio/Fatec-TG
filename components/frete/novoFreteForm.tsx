@@ -1,9 +1,10 @@
-import { View, Text, Pressable, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { View, Text, Pressable, StyleSheet, Image, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
 import AddressInput from "../maps/address-input";
 import React, { useState } from "react";
 import 'react-native-get-random-values';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Timestamp } from "firebase/firestore";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function NovoFreteForm() {
     const [selectedAddress1, setSelectedAddress1] = useState<string | null>(null);
@@ -26,86 +27,93 @@ export default function NovoFreteForm() {
     const timestamp = Timestamp.fromDate(date);
 
     return (
-        <View style={styles.container}>
-            <View style={styles.section}>
-                <Text style={styles.label}>Selecione a origem:</Text>
-                <AddressInput onAddressSelected={(address, loc) => {
-                    setSelectedAddress1(address);
-                    setLocation1(loc);
-                }} />
-            </View>
-
-            <View style={styles.section}>
-                <Text style={styles.label}>Selecione o destino:</Text>
-                <AddressInput onAddressSelected={(address, loc) => {
-                    setSelectedAddress2(address);
-                    setLocation2(loc);
-                }} />
-            </View>
-
-            <View style={styles.section}>
-                <Text style={styles.label}>Selecione o tamanho do frete:</Text>
-                <View style={styles.sizeContainer}>
-                    {["small", "medium", "large"].map((size) => (
-                        <TouchableOpacity
-                            key={size}
-                            style={[
-                                styles.sizeOption,
-                                selectedSize === size && styles.selectedSizeOption
-                            ]}
-                            onPress={() => setSelectedSize(size as "small" | "medium" | "large")}
-                        >
-                            <Image
-                                source={
-                                    size === "small"
-                                        ? require("@/assets/images/small.png")
-                                        : size === "medium"
-                                            ? require("@/assets/images/medium.png")
-                                            : require("@/assets/images/large.png")
-                                }
-                                style={styles.sizeImage}
-                                resizeMode="contain"
-                            />
-                            <Text style={styles.sizeLabel}>
-                                {size === "small" ? "Pequeno" : size === "medium" ? "Médio" : "Grande"}
-                            </Text>
-                        </TouchableOpacity>
-                    ))}
+        <SafeAreaView style={{ flex: 1 }}>
+            <KeyboardAvoidingView 
+                style={styles.container}
+                behavior={Platform.OS === "ios" ? "padding" : undefined}
+            >
+                <View style={[styles.section, { overflow: 'visible' }]}>
+                    <Text style={styles.label}>Selecione a origem:</Text>
+                    <AddressInput onAddressSelected={(address, loc) => {
+                        setSelectedAddress1(address);
+                        setLocation1(loc);
+                    }} />
                 </View>
-            </View>
 
-            <View style={styles.section}>
-                <Text style={styles.label}>Selecione a data e hora:</Text>
-                <Pressable onPress={showDatePicker} style={styles.dateButton}>
-                    <Text style={styles.dateText}>{date.toLocaleString("pt-BR")}</Text>
+                <View style={[styles.section, { overflow: 'visible' }]}>
+                    <Text style={styles.label}>Selecione o destino:</Text>
+                    <AddressInput onAddressSelected={(address, loc) => {
+                        setSelectedAddress2(address);
+                        setLocation2(loc);
+                    }} />
+                </View>
+
+                <View style={styles.section}>
+                    <Text style={styles.label}>Selecione o tamanho do frete:</Text>
+                    <View style={styles.sizeContainer}>
+                        {["small", "medium", "large"].map((size) => (
+                            <TouchableOpacity
+                                key={size}
+                                style={[
+                                    styles.sizeOption,
+                                    selectedSize === size && styles.selectedSizeOption
+                                ]}
+                                onPress={() => setSelectedSize(size as "small" | "medium" | "large")}
+                            >
+                                <Image
+                                    source={
+                                        size === "small"
+                                            ? require("@/assets/images/small.png")
+                                            : size === "medium"
+                                                ? require("@/assets/images/medium.png")
+                                                : require("@/assets/images/large.png")
+                                    }
+                                    style={styles.sizeImage}
+                                    resizeMode="contain"
+                                />
+                                <Text style={styles.sizeLabel}>
+                                    {size === "small" ? "Pequeno" : size === "medium" ? "Médio" : "Grande"}
+                                </Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                </View>
+
+                <View style={styles.section}>
+                    <Text style={styles.label}>Selecione a data e hora:</Text>
+                    <Pressable onPress={showDatePicker} style={styles.dateButton}>
+                        <Text style={styles.dateText}>{date.toLocaleString("pt-BR")}</Text>
+                    </Pressable>
+                    <DateTimePickerModal
+                        isVisible={isDatePickerVisible}
+                        mode="datetime"
+                        onConfirm={handleConfirm}
+                        onCancel={hideDatePicker}
+                    />
+                </View>
+
+                <Pressable style={styles.backButton} onPress={() => {
+                    console.log({
+                        origem: selectedAddress1,
+                        destino: selectedAddress2,
+                        coordenadasOrigem: location1,
+                        coordenadasDestino: location2,
+                        tamanho: selectedSize,
+                        data: timestamp,
+                    });
+                }}>
+                    <Text style={styles.backButtonText}>Criar Frete</Text>
                 </Pressable>
-                <DateTimePickerModal
-                    isVisible={isDatePickerVisible}
-                    mode="datetime"
-                    onConfirm={handleConfirm}
-                    onCancel={hideDatePicker}
-                />
-            </View>
-
-            <Pressable style={styles.backButton} onPress={() => {
-                console.log({
-                    origem: selectedAddress1,
-                    destino: selectedAddress2,
-                    coordenadasOrigem: location1,
-                    coordenadasDestino: location2,
-                    tamanho: selectedSize,
-                    data: timestamp,
-                });
-            }}>
-                <Text style={styles.backButtonText}>Criar Frete</Text>
-            </Pressable>
-        </View>
+            </KeyboardAvoidingView>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         padding: 16,
+        justifyContent: "space-between",
     },
     section: {
         marginBottom: 20,
@@ -150,7 +158,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     backButton: {
-        marginTop: 20,
         padding: 12,
         backgroundColor: "#ccc",
         borderRadius: 6,

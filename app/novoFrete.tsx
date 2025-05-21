@@ -5,17 +5,18 @@ import { View, StyleSheet, Pressable, Text, ScrollView } from "react-native";
 
 export default function NovoFrete() {
     return (
-        <ScrollView style={styles.container}>
+        <View style={styles.container}>
             <NovoFreteForm />
             <Pressable style={styles.backButton} onPress={() => router.back()}>
                 <Text style={styles.backButtonText}>Voltar</Text>
             </Pressable>
-        </ScrollView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
+        flex:1,
         padding: 16,
     },
     backButton: {
