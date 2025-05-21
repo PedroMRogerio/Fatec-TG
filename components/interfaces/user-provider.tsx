@@ -1,7 +1,7 @@
-export interface UserProvider {
+export interface IUserProvider{
+    uid: string
     name: string
     email: string
-    password: string
     cpf: string
     cnh: string
 }

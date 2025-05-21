@@ -1,4 +1,6 @@
-export interface Vehicle {
+export interface IVehicle {
+    id: string
+    plate:string
     fixedPrice: number
     variablePrice: number
     type: string

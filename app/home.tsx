@@ -1,33 +1,26 @@
 import { Link } from "expo-router";
-import { View, StyleSheet, Text, Pressable, Dimensions } from "react-native";
+import { View, StyleSheet, Text, Pressable, ScrollView } from "react-native";
+import { useUser } from "@/contexts/userContext";
+import FreteCardList from "@/components/frete/freteCard";
 
 export default function Home() {
+    const { user } = useUser();
 
     return (
+        <View style={styles.container}>
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+                <Text style={styles.titulo}>
+                    Bem vindo{user?.name ? `, ${user.name}` : ' Usuário'}!
+                </Text>
 
-        <View style={styles.view}>
-            <Text style={styles.titulo}>Bem vindo Usuário!</Text>
-            {/*Troca para o usuário dentro do banco dados*/}
-            <View style={styles.sublinha}></View>
-            <Text style={styles.subtitulo}>Ultimos fretes:</Text>
-            <Link href="/frete1" asChild>
-                <Pressable style={styles.box}>
-                    <Text style={styles.frete}>Frete 1</Text>
-                </Pressable>
-            </Link>
-            <View style={styles.separador}></View>
-            <Link href="/frete2" asChild>
-                <Pressable style={styles.box}>
-                    <Text style={styles.frete}>Frete 2</Text>
-                </Pressable>
-            </Link>
-            <View style={styles.separador}></View>
-            <Link href="/frete3" asChild>
-                <Pressable style={styles.box}>
-                    <Text style={styles.frete}>Frete 3</Text>
-                </Pressable>
-            </Link>
-            <View style={styles.separador2}></View>
+                <View style={styles.sublinha}></View>
+                <Text style={styles.subtitulo}>Fretes:</Text>
+
+                <FreteCardList uid={user?.uid ? user.uid : ''} />
+
+                <View style={styles.separador2}></View>
+            </ScrollView>
+
             <View style={styles.view2}>
                 <Link href="/usuario" asChild>
                     <Pressable style={styles.botoes}>
@@ -44,32 +37,19 @@ export default function Home() {
                         <Text style={styles.textoBotoes}>Config.</Text>
                     </Pressable>
                 </Link>
-                <Link href="/teste-mapa" asChild>
-                    <Pressable style={styles.botoes}>
-                        <Text style={styles.textoBotoes}>Teste Mapa</Text>
-                    </Pressable>
-                </Link>
-            </View >
-        </View >
-    )
+            </View>
+        </View>
+    );
 }
 
 export const styles = StyleSheet.create({
-    view: {
+    container: {
         flex: 1,
         flexDirection: 'column',
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
-        padding: 10
     },
-    box: {
-        alignSelf: 'center',
-        justifyContent: 'center',
-        width: '95%',
-        height: '15%',
-        borderWidth: 0.85,
-        borderRadius: 5,
-        borderColor: '#808080'
+    scrollContent: {
+        padding: 10,
+        paddingBottom: 100,
     },
     titulo: {
         fontSize: 22,
@@ -79,35 +59,28 @@ export const styles = StyleSheet.create({
         fontSize: 18,
         paddingBottom: 4
     },
-    frete: {
-        fontSize: 15,
-        alignSelf: 'center',
-    },
-    separador: {
-        height: 6
-    },
-    //Separador temporário até fazer o rodapé
-    separador2: {
-        width: '100%',
-        height: Dimensions.get('window').height*0.25
-    },
     sublinha: {
         borderWidth: 0.25,
         borderColor: '#808080',
         width: '100%'
     },
+    separador2: {
+        height: 20,
+    },
     view2: {
-        alignSelf: 'center',
-        flex: 1,
-        width: '120%',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 80,
         flexDirection: 'row',
         justifyContent: 'space-around',
-        alignItems: 'flex-end',
-        paddingBottom: 10,
+        alignItems: 'center',
         borderTopWidth: 0.5,
-        borderTopColor: '#808080'
+        borderTopColor: '#808080',
+        backgroundColor: '#fff',
+        paddingBottom: 10,
     },
-    //Botão temporario para visualizar a idéia 
     botoes: {
         borderWidth: 1,
         width: 50,
@@ -120,4 +93,4 @@ export const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: 'bold'
     }
-})
+});
