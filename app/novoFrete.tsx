@@ -1,11 +1,33 @@
-import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import NovoFreteForm from "@/components/frete/novoFreteForm";
+import { router } from "expo-router";
+import React from "react";
+import { View, StyleSheet, Pressable, Text, ScrollView } from "react-native";
 
-export default function NovoFrete(){
-
+export default function NovoFrete() {
     return (
-        <View>
-            
-        </View>
-    )
+        <ScrollView style={styles.container}>
+            <NovoFreteForm />
+            <Pressable style={styles.backButton} onPress={() => router.back()}>
+                <Text style={styles.backButtonText}>Voltar</Text>
+            </Pressable>
+        </ScrollView>
+    );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        padding: 16,
+    },
+    backButton: {
+        marginTop: 20,
+        padding: 12,
+        backgroundColor: "#ccc",
+        borderRadius: 6,
+        alignItems: "center",
+    },
+    backButtonText: {
+        fontSize: 16,
+        fontWeight: "bold",
+        color: "#333",
+    },
+});
