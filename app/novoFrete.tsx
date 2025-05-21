@@ -5,7 +5,7 @@ export default function NovoFrete(){
 
     return (
         <View>
-
+            
         </View>
     )
 }
