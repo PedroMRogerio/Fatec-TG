@@ -18,4 +18,19 @@ export default class FreteQuery {
 
     return doc;
   }
+
+  static async getFreteProv(uid: string) {
+    const q = query(colRef, where('uidProv', '==', uid));
+    const snapshot = await getDocs(q);
+
+    if (snapshot.empty) return [];
+
+
+    const doc = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    return doc;
+  }
 }
