@@ -6,7 +6,7 @@ import { Dimensions } from "react-native";
 import { getEndereco } from "@/components/maps/address-name";
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from "expo-router";
-import { freteCardsStyle } from "../styles/colorStyles";
+import { freteCardsStyle, TAG_CANCEL, TAG_OK, TAG_CLOSED, TAG_OPEN, TAG_OVERDUE } from "../styles/colorStyles";
 
 const { width, height } = Dimensions.get("window");
 
@@ -26,6 +26,27 @@ export default function ProvCardList({ uid, refreshKey }: ProvCardListProps) {
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
+    function CardColor(status:string): [string, string, ...string[]] {
+        switch (status) {
+            case 'closed':
+                return TAG_CLOSED
+                break
+            case 'ok':
+                return TAG_OK
+                break
+            case 'open':
+                return TAG_OPEN
+                break
+            case 'cancel':
+                return TAG_CANCEL
+                break
+            case 'overdue':
+                return TAG_OVERDUE
+                break
+            default:
+                return ['transparent', 'transparent', 'transparent', 'transparent']
+        }
+    }
     useEffect(() => {
         const fetchFretes = async () => {
             setLoading(true);
@@ -69,8 +90,8 @@ export default function ProvCardList({ uid, refreshKey }: ProvCardListProps) {
                     <View style={freteCardsStyle.default}>
                         {/* Gradiente horizontal */}
                         <LinearGradient
-                            colors={['#88E788', 'transparent', 'transparent', '#88E788']}
-                            locations={[0, 0.05, 0.95, 1]}
+                            colors={CardColor(frete.status)}
+                            locations={[0, 0.02, 0.98, 1]}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 0 }}
                             style={[StyleSheet.absoluteFillObject]}
@@ -78,7 +99,7 @@ export default function ProvCardList({ uid, refreshKey }: ProvCardListProps) {
 
                         {/* Gradiente vertical */}
                         <LinearGradient
-                            colors={['#88E788', 'transparent', 'transparent', '#88E788']}
+                            colors={CardColor(frete.status)}
                             locations={[0, 0.1, 0.9, 1]}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 0, y: 1 }}

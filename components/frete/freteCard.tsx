@@ -7,7 +7,6 @@ import { getEndereco } from "@/components/maps/address-name";
 import { useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { freteCardsStyle, TAG_CANCEL, TAG_OK, TAG_CLOSED, TAG_OPEN, TAG_OVERDUE } from "../styles/colorStyles";
-import { useUser } from "@/contexts/userContext";
 
 const { width, height } = Dimensions.get("window");
 
@@ -26,7 +25,6 @@ export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
     const [fretes, setFretes] = useState<FreteItem[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
-    const { user } = useUser()
 
     function CardColor(status:string): [string, string, ...string[]] {
         switch (status) {
@@ -94,7 +92,7 @@ export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
                         {/* Gradiente horizontal */}
                         <LinearGradient
                             colors={CardColor(frete.status)}
-                            locations={[0, 0.05, 0.95, 1]}
+                            locations={[0, 0.02, 0.98, 1]}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 0 }}
                             style={[StyleSheet.absoluteFillObject]}
