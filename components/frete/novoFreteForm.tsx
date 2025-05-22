@@ -1,12 +1,18 @@
-import { View, Text, Pressable, StyleSheet, Image, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
+import { View, Text, Pressable, StyleSheet, Image, TouchableOpacity, KeyboardAvoidingView, Platform, Alert } from "react-native";
 import AddressInput from "../maps/address-input";
 import React, { useState } from "react";
 import 'react-native-get-random-values';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { Timestamp } from "firebase/firestore";
+import { Timestamp, collection, addDoc } from "firebase/firestore";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useUser } from "@/contexts/userContext";
+import { db } from "@/helpers/firebaseConfig";
+import { router } from "expo-router";
 
 export default function NovoFreteForm() {
+    const { user } = useUser();
+    const [loading, setLoading] = useState(false)
+
     const [selectedAddress1, setSelectedAddress1] = useState<string | null>(null);
     const [location1, setLocation1] = useState<{ lat: number; lng: number } | null>(null);
 
@@ -26,9 +32,38 @@ export default function NovoFreteForm() {
 
     const timestamp = Timestamp.fromDate(date);
 
+    const handleCreateFrete = async () => {
+        if (!location1 || !location2 || !selectedSize || !user) {
+            Alert.alert("Erro", "Preencha todos os campos antes de criar o frete.");
+            return;
+        }
+
+        const freteData = {
+            org: [location1.lat, location1.lng],
+            dst: [location2.lat, location2.lng],
+            type: selectedSize,
+            date: timestamp,
+            uid: user.uid,
+            status: 'open',
+            crtDate: Timestamp.now()
+        };
+        if (loading) return;
+        setLoading(true);
+        try {
+            await addDoc(collection(db, "Frete"), freteData);
+            Alert.alert("Sucesso", "Frete criado com sucesso!");
+            router.push('/home')
+        } catch (error) {
+            console.error("Erro ao criar frete: ", error);
+            Alert.alert("Erro", "Não foi possível criar o frete.");
+        } finally {
+            setLoading(false)
+        }
+    };
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <KeyboardAvoidingView 
+            <KeyboardAvoidingView
                 style={styles.container}
                 behavior={Platform.OS === "ios" ? "padding" : undefined}
             >
@@ -92,16 +127,7 @@ export default function NovoFreteForm() {
                     />
                 </View>
 
-                <Pressable style={styles.backButton} onPress={() => {
-                    console.log({
-                        origem: selectedAddress1,
-                        destino: selectedAddress2,
-                        coordenadasOrigem: location1,
-                        coordenadasDestino: location2,
-                        tamanho: selectedSize,
-                        data: timestamp,
-                    });
-                }}>
+                <Pressable style={styles.backButton} onPress={handleCreateFrete}>
                     <Text style={styles.backButtonText}>Criar Frete</Text>
                 </Pressable>
             </KeyboardAvoidingView>

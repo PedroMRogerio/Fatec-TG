@@ -3,12 +3,10 @@ import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable } from
 import FreteQuery from "@/components/firestore-query/frete";
 import { Timestamp } from "firebase/firestore";
 import { Dimensions } from "react-native";
-import { getEndereco } from "@/components/maps/address-name"
+import { getEndereco } from "@/components/maps/address-name";
 import { useRouter } from "expo-router";
 
 const { width, height } = Dimensions.get("window");
-//const minSize = Math.min(width, height);
-
 
 interface FreteItem {
     id: string;
@@ -16,17 +14,19 @@ interface FreteItem {
     [key: string]: any;
 }
 
-interface FreteCardListProps {
+interface ProvCardListProps {
     uid: string;
+    refreshKey: number;
 }
 
-export default function ProvCardList({ uid }: FreteCardListProps) {
+export default function ProvCardList({ uid, refreshKey }: ProvCardListProps) {
     const [fretes, setFretes] = useState<FreteItem[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
         const fetchFretes = async () => {
+            setLoading(true);
             try {
                 const results = await FreteQuery.getFreteProv(uid);
 
@@ -49,7 +49,7 @@ export default function ProvCardList({ uid }: FreteCardListProps) {
         };
 
         fetchFretes();
-    }, [uid]);
+    }, [uid, refreshKey])
 
     if (loading) {
         return <ActivityIndicator style={{ marginTop: 20 }} />;
@@ -64,8 +64,7 @@ export default function ProvCardList({ uid }: FreteCardListProps) {
                         params: { ...frete },
                     })
                 }>
-                    <View key={frete.id} style={styles.card}>
-                        {/*<Text style={styles.title}>Frete ID: {frete.id}</Text>*/}
+                    <View style={styles.card}>
                         <Text style={styles.title}>{frete.endereco}</Text>
                         <Text style={styles.date}>{formatDate(frete.date ? frete.date : '')}</Text>
                     </View>
@@ -93,13 +92,11 @@ function formatDate(date: Timestamp | string): string {
 const styles = StyleSheet.create({
     container: {
         width: width * 1,
-        height: height * 1,
         padding: 10,
     },
     card: {
         padding: 15,
         width: width * 0.90,
-        height: height * 0.15,
         borderWidth: 0.85,
         borderRadius: 5,
         borderColor: '#808080',
@@ -114,4 +111,4 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginBottom: 10,
     }
-})
+});

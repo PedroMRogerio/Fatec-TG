@@ -3,9 +3,18 @@ import { View, StyleSheet, Text, Pressable, ScrollView } from "react-native";
 import { useUser } from "@/contexts/userContext";
 import FreteCardList from "@/components/frete/freteCard";
 import ProvCardList from "@/components/frete/provCard";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useState, useCallback } from "react";
 
 export default function Home() {
     const { user } = useUser();
+    const [refreshKey, setRefreshKey] = useState(0);
+
+    useFocusEffect(
+        useCallback(() => {
+            setRefreshKey(prev => prev + 1);
+        }, [])
+    );
 
     return (
         <View style={styles.container}>
@@ -16,13 +25,13 @@ export default function Home() {
 
                 <View style={styles.sublinha}></View>
                 <Text style={styles.subtitulo}>Fretes:</Text>
+
                 {user?.uType === 'prov' && (
-                <ProvCardList uid={user?.uid ? user.uid : ''} />
+                    <ProvCardList uid={user?.uid ? user.uid : ''} refreshKey={refreshKey} />
                 )}
                 {user?.uType === 'cli' && (
-                <FreteCardList uid={user?.uid ? user.uid : ''} />
+                    <FreteCardList uid={user?.uid ? user.uid : ''} refreshKey={refreshKey} />
                 )}
-
 
                 <View style={styles.separador2}></View>
             </ScrollView>
