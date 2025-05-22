@@ -5,6 +5,9 @@ import { Timestamp } from "firebase/firestore";
 import { Dimensions } from "react-native";
 import { getEndereco } from "@/components/maps/address-name";
 import { useRouter } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+import { freteCardsStyle, TAG_CANCEL, TAG_OK, TAG_CLOSED, TAG_OPEN, TAG_OVERDUE } from "../styles/colorStyles";
+import { useUser } from "@/contexts/userContext";
 
 const { width, height } = Dimensions.get("window");
 
@@ -23,6 +26,29 @@ export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
     const [fretes, setFretes] = useState<FreteItem[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
+    const { user } = useUser()
+
+    function CardColor(status:string): [string, string, ...string[]] {
+        switch (status) {
+            case 'closed':
+                return TAG_CLOSED
+                break
+            case 'ok':
+                return TAG_OK
+                break
+            case 'open':
+                return TAG_OPEN
+                break
+            case 'cancel':
+                return TAG_CANCEL
+                break
+            case 'overdue':
+                return TAG_OVERDUE
+                break
+            default:
+                return ['transparent', 'transparent', 'transparent', 'transparent']
+        }
+    }
 
     useEffect(() => {
         const fetchFretes = async () => {
@@ -64,7 +90,24 @@ export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
                         params: { ...frete },
                     })
                 }>
-                    <View style={styles.card}>
+                    <View style={freteCardsStyle.default}>
+                        {/* Gradiente horizontal */}
+                        <LinearGradient
+                            colors={CardColor(frete.status)}
+                            locations={[0, 0.05, 0.95, 1]}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 0 }}
+                            style={[StyleSheet.absoluteFillObject]}
+                        />
+
+                        {/* Gradiente vertical */}
+                        <LinearGradient
+                            colors={CardColor(frete.status)}
+                            locations={[0, 0.1, 0.9, 1]}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 0, y: 1 }}
+                            style={[StyleSheet.absoluteFillObject]}
+                        />
                         <Text style={styles.title}>{frete.endereco}</Text>
                         <Text style={styles.date}>{formatDate(frete.date ? frete.date : '')}</Text>
                     </View>
