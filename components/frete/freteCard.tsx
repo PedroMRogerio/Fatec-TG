@@ -6,7 +6,7 @@ import { Dimensions } from "react-native";
 import { getEndereco } from "@/components/maps/address-name";
 import { useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
-import { freteCardsStyle, TAG_CANCEL, TAG_OK, TAG_CLOSED, TAG_OPEN, TAG_OVERDUE } from "../styles/colorStyles";
+import { freteCardsStyle, TAG_CANCEL, TAG_OK, TAG_CLOSED, TAG_OPEN, TAG_OVERDUE, TAG_CANCEL2, TAG_CLOSED2, TAG_OK2, TAG_OPEN2, TAG_OVERDUE2 } from "../styles/colorStyles";
 
 const { width, height } = Dimensions.get("window");
 
@@ -43,6 +43,23 @@ export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
         }
     }
 
+    function CardColor2(status: string): [string, string, ...string[]] {
+        switch (status) {
+            case 'closed':
+                return TAG_CLOSED2
+            case 'ok':
+                return TAG_OK2
+            case 'open':
+                return TAG_OPEN2
+            case 'cancel':
+                return TAG_CANCEL2
+            case 'overdue':
+                return TAG_OVERDUE2
+            default:
+                return ['transparent', 'transparent', 'transparent', 'transparent']
+        }
+    }
+
     function statusName(status:string){
         switch (status) {
             case 'closed':
@@ -59,6 +76,8 @@ export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
                 return 'Indefinido'
         }
     }
+
+    
 
 
     useEffect(() => {
@@ -146,7 +165,7 @@ export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
                     <View style={freteCardsStyle.default}>
                         {/* Gradiente horizontal */}
                         <LinearGradient
-                            colors={CardColor(frete.status)}
+                            colors={CardColor2(frete.status)}
                             locations={[0, 0.02, 0.98, 1]}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 0 }}
