@@ -8,6 +8,7 @@ import React, { useState, useCallback } from "react";
 
 import userButton from "@/assets/images/userButton.png";
 import newFreteButton from "@/assets/images/newFreteButton.png";
+import searchButton from "@/assets/images/searchButton.png"
 import configButton from "@/assets/images/configButton.png";
 
 const { width } = Dimensions.get("window");
@@ -48,11 +49,20 @@ export default function Home() {
                         <Image source={userButton} style={styles.icon} />
                     </Pressable>
                 </Link>
+                {user?.uType === 'prov' && (
+                <Link href="/frete-buscar" asChild>
+                    <Pressable style={styles.botoes2}>
+                        <Image source={searchButton} style={styles.icon} />
+                    </Pressable>
+                </Link>
+                )}
+                {user?.uType === 'cli' && (
                 <Link href="/novoFrete" asChild>
                     <Pressable style={styles.botoes2}>
                         <Image source={newFreteButton} style={styles.icon} />
                     </Pressable>
                 </Link>
+                )}
                 <Link href="/config" asChild>
                     <Pressable style={styles.botoes}>
                         <Image source={configButton} style={styles.icon} />
