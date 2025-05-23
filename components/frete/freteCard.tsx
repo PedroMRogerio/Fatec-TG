@@ -27,8 +27,6 @@ export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
     const [loading, setLoading] = useState(true)
     const router = useRouter()
 
-    
-
     function statusName(status:string){
         switch (status) {
             case 'closed':
@@ -67,7 +65,7 @@ export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
 
                             const now = new Date()
 
-                            if (now > freteDate && frete.status !== 'overdue' && frete.status !== 'closed') {
+                            if (now > freteDate && frete.status !== 'overdue' && frete.status !== 'closed' && frete.status !== 'cancel') {
                                 updatedStatus = 'overdue'
                                 await FreteQuery.updateFreteStatus(frete.id, 'overdue')
                             }

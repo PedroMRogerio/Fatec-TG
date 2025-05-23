@@ -27,6 +27,23 @@ export default function ProvCardList({ uid, refreshKey }: ProvCardListProps) {
     const [loading, setLoading] = useState(true)
     const router = useRouter()
 
+    function statusName(status: string) {
+        switch (status) {
+            case 'closed':
+                return 'Concluído'
+            case 'ok':
+                return 'Preparado'
+            case 'open':
+                return 'Procurando provedor...'
+            case 'cancel':
+                return 'Cancelado'
+            case 'overdue':
+                return 'Vencido'
+            default:
+                return 'Indefinido'
+        }
+    }
+
     useEffect(() => {
         const fetchFretes = async () => {
             setLoading(true)
@@ -35,13 +52,53 @@ export default function ProvCardList({ uid, refreshKey }: ProvCardListProps) {
 
                 const fretesComEndereco = await Promise.all(
                     results.map(async (frete: FreteItem) => {
+                        let endereco = "Coordenadas não disponíveis"
                         if (frete.dst && Array.isArray(frete.dst) && frete.dst.length >= 2) {
-                            const endereco = await getEndereco(frete.dst[0], frete.dst[1])
-                            return { ...frete, endereco }
+                            endereco = await getEndereco(frete.dst[0], frete.dst[1])
                         }
-                        return { ...frete, endereco: "Coordenadas não disponíveis" }
+
+                        let updatedStatus = frete.status
+                        if (frete.date) {
+                            const freteDate = frete.date instanceof Timestamp
+                                ? frete.date.toDate()
+                                : new Date(frete.date)
+
+                            const now = new Date()
+
+                            if (now > freteDate && frete.status !== 'overdue' && frete.status !== 'closed' && frete.status !== 'cancel') {
+                                updatedStatus = 'overdue'
+                                await FreteQuery.updateFreteStatus(frete.id, 'overdue')
+                            }
+                        }
+
+                        return { ...frete, endereco, status: updatedStatus }
                     })
                 )
+
+                fretesComEndereco.sort((a, b) => {
+                    const statusOrder = (status: string) => {
+                        if (status === 'ok' || status === 'open') return 1
+                        return 0
+                    }
+
+                    const aStatus = statusOrder(a.status)
+                    const bStatus = statusOrder(b.status)
+
+                    if (aStatus !== bStatus) {
+                        return bStatus - aStatus
+                    } else {
+                        const aDate = a.date
+                            ? (a.date instanceof Timestamp ? a.date.toDate() : new Date(a.date))
+                            : new Date(0)
+
+                        const bDate = b.date
+                            ? (b.date instanceof Timestamp ? b.date.toDate() : new Date(b.date))
+                            : new Date(0)
+
+                        return bDate.getTime() - aDate.getTime()
+                    }
+                })
+
 
                 setFretes(fretesComEndereco)
             } catch (err) {
@@ -87,6 +144,7 @@ export default function ProvCardList({ uid, refreshKey }: ProvCardListProps) {
                         />
                         <Text style={styles.title}>{frete.endereco}</Text>
                         <Text style={styles.date}>{formatDate(frete.date ? frete.date : '')}</Text>
+                        <Text style={[styles.date, { fontWeight: 'bold' }]}>{statusName(frete.status)}</Text>
                     </View>
                 </Pressable>
             ))
