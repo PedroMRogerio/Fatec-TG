@@ -1,81 +1,61 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable } from "react-native";
-import FreteQuery from "@/components/firestore-query/frete";
-import { Timestamp } from "firebase/firestore";
-import { Dimensions } from "react-native";
-import { getEndereco } from "@/components/maps/address-name";
-import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from "expo-router";
-import { freteCardsStyle, TAG_CANCEL, TAG_OK, TAG_CLOSED, TAG_OPEN, TAG_OVERDUE } from "../styles/colorStyles";
+import React, { useEffect, useState } from "react"
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable } from "react-native"
+import FreteQuery from "@/components/firestore-query/frete"
+import { Timestamp } from "firebase/firestore"
+import { Dimensions } from "react-native"
+import { getEndereco } from "@/components/maps/address-name"
+import { LinearGradient } from 'expo-linear-gradient'
+import { useRouter } from "expo-router"
+import { CardColor, CardColor2 } from "./cardColor"
+import { freteCardsStyle } from "../styles/colorStyles"
 
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window")
 
 interface FreteItem {
-    id: string;
-    date?: Timestamp; // ou string
-    [key: string]: any;
+    id: string
+    date?: Timestamp // ou string
+    [key: string]: any
 }
 
 interface ProvCardListProps {
-    uid: string;
-    refreshKey: number;
+    uid: string
+    refreshKey: number
 }
 
 export default function ProvCardList({ uid, refreshKey }: ProvCardListProps) {
-    const [fretes, setFretes] = useState<FreteItem[]>([]);
-    const [loading, setLoading] = useState(true);
-    const router = useRouter();
+    const [fretes, setFretes] = useState<FreteItem[]>([])
+    const [loading, setLoading] = useState(true)
+    const router = useRouter()
 
-    function CardColor(status:string): [string, string, ...string[]] {
-        switch (status) {
-            case 'closed':
-                return TAG_CLOSED
-                break
-            case 'ok':
-                return TAG_OK
-                break
-            case 'open':
-                return TAG_OPEN
-                break
-            case 'cancel':
-                return TAG_CANCEL
-                break
-            case 'overdue':
-                return TAG_OVERDUE
-                break
-            default:
-                return ['transparent', 'transparent', 'transparent', 'transparent']
-        }
-    }
     useEffect(() => {
         const fetchFretes = async () => {
-            setLoading(true);
+            setLoading(true)
             try {
-                const results = await FreteQuery.getFreteProv(uid);
+                const results = await FreteQuery.getFreteProv(uid)
 
                 const fretesComEndereco = await Promise.all(
                     results.map(async (frete: FreteItem) => {
                         if (frete.dst && Array.isArray(frete.dst) && frete.dst.length >= 2) {
-                            const endereco = await getEndereco(frete.dst[0], frete.dst[1]);
-                            return { ...frete, endereco };
+                            const endereco = await getEndereco(frete.dst[0], frete.dst[1])
+                            return { ...frete, endereco }
                         }
-                        return { ...frete, endereco: "Coordenadas não disponíveis" };
+                        return { ...frete, endereco: "Coordenadas não disponíveis" }
                     })
-                );
+                )
 
-                setFretes(fretesComEndereco);
+                setFretes(fretesComEndereco)
             } catch (err) {
-                console.error("Erro ao buscar fretes:", err);
+                console.error("Erro ao buscar fretes:", err)
             } finally {
-                setLoading(false);
+                setLoading(false)
             }
-        };
+        }
 
-        fetchFretes();
+        fetchFretes()
     }, [uid, refreshKey])
 
     if (loading) {
-        return <ActivityIndicator style={{ marginTop: 20 }} />;
+        return <ActivityIndicator style={{ marginTop: 20 }} />
     }
 
     return (
@@ -90,7 +70,7 @@ export default function ProvCardList({ uid, refreshKey }: ProvCardListProps) {
                     <View style={freteCardsStyle.default}>
                         {/* Gradiente horizontal */}
                         <LinearGradient
-                            colors={CardColor(frete.status)}
+                            colors={CardColor2(frete.status)}
                             locations={[0, 0.02, 0.98, 1]}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 0 }}
@@ -112,21 +92,21 @@ export default function ProvCardList({ uid, refreshKey }: ProvCardListProps) {
             ))
             }
         </ScrollView >
-    );
+    )
 }
 
 function formatDate(date: Timestamp | string): string {
     try {
-        const jsDate = typeof date === "string" ? new Date(date) : date.toDate();
+        const jsDate = typeof date === "string" ? new Date(date) : date.toDate()
         return jsDate.toLocaleDateString("pt-BR", {
             day: "2-digit",
             month: "2-digit",
             year: "numeric",
             hour: "2-digit",
             minute: "2-digit",
-        });
+        })
     } catch {
-        return "Data inválida";
+        return "Data inválida"
     }
 }
 
@@ -152,4 +132,4 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginBottom: 10,
     }
-});
+})

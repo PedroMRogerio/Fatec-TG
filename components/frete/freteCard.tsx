@@ -1,64 +1,33 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable } from "react-native";
-import FreteQuery from "@/components/firestore-query/frete";
-import { Timestamp } from "firebase/firestore";
-import { Dimensions } from "react-native";
-import { getEndereco } from "@/components/maps/address-name";
-import { useRouter } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
-import { freteCardsStyle, TAG_CANCEL, TAG_OK, TAG_CLOSED, TAG_OPEN, TAG_OVERDUE, TAG_CANCEL2, TAG_CLOSED2, TAG_OK2, TAG_OPEN2, TAG_OVERDUE2 } from "../styles/colorStyles";
+import React, { useEffect, useState } from "react"
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable } from "react-native"
+import FreteQuery from "@/components/firestore-query/frete"
+import { Timestamp } from "firebase/firestore"
+import { Dimensions } from "react-native"
+import { getEndereco } from "@/components/maps/address-name"
+import { useRouter } from "expo-router"
+import { LinearGradient } from "expo-linear-gradient"
+import { CardColor, CardColor2 } from "./cardColor"
+import { freteCardsStyle } from "../styles/colorStyles"
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window")
 
 interface FreteItem {
-    id: string;
-    date?: Timestamp; // ou string
-    [key: string]: any;
+    id: string
+    date?: Timestamp // ou string
+    [key: string]: any
 }
 
 interface ProvCardListProps {
-    uid: string;
-    refreshKey: number;
+    uid: string
+    refreshKey: number
 }
 
 export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
-    const [fretes, setFretes] = useState<FreteItem[]>([]);
-    const [loading, setLoading] = useState(true);
-    const router = useRouter();
+    const [fretes, setFretes] = useState<FreteItem[]>([])
+    const [loading, setLoading] = useState(true)
+    const router = useRouter()
 
-    function CardColor(status: string): [string, string, ...string[]] {
-        switch (status) {
-            case 'closed':
-                return TAG_CLOSED
-            case 'ok':
-                return TAG_OK
-            case 'open':
-                return TAG_OPEN
-            case 'cancel':
-                return TAG_CANCEL
-            case 'overdue':
-                return TAG_OVERDUE
-            default:
-                return ['transparent', 'transparent', 'transparent', 'transparent']
-        }
-    }
-
-    function CardColor2(status: string): [string, string, ...string[]] {
-        switch (status) {
-            case 'closed':
-                return TAG_CLOSED2
-            case 'ok':
-                return TAG_OK2
-            case 'open':
-                return TAG_OPEN2
-            case 'cancel':
-                return TAG_CANCEL2
-            case 'overdue':
-                return TAG_OVERDUE2
-            default:
-                return ['transparent', 'transparent', 'transparent', 'transparent']
-        }
-    }
+    
 
     function statusName(status:string){
         switch (status) {
@@ -77,80 +46,77 @@ export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
         }
     }
 
-    
-
-
     useEffect(() => {
         const fetchFretes = async () => {
-            setLoading(true);
+            setLoading(true)
             try {
-                const results = await FreteQuery.getFrete(uid);
+                const results = await FreteQuery.getFrete(uid)
 
                 const fretesComEndereco = await Promise.all(
                     results.map(async (frete: FreteItem) => {
-                        let endereco = "Coordenadas não disponíveis";
+                        let endereco = "Coordenadas não disponíveis"
                         if (frete.dst && Array.isArray(frete.dst) && frete.dst.length >= 2) {
-                            endereco = await getEndereco(frete.dst[0], frete.dst[1]);
+                            endereco = await getEndereco(frete.dst[0], frete.dst[1])
                         }
 
-                        let updatedStatus = frete.status;
+                        let updatedStatus = frete.status
                         if (frete.date) {
                             const freteDate = frete.date instanceof Timestamp
                                 ? frete.date.toDate()
-                                : new Date(frete.date);
+                                : new Date(frete.date)
 
-                            const now = new Date();
+                            const now = new Date()
 
                             if (now > freteDate && frete.status !== 'overdue' && frete.status !== 'closed') {
-                                updatedStatus = 'overdue';
-                                await FreteQuery.updateFreteStatus(frete.id, 'overdue');
+                                updatedStatus = 'overdue'
+                                await FreteQuery.updateFreteStatus(frete.id, 'overdue')
                             }
                         }
 
-                        return { ...frete, endereco, status: updatedStatus };
+                        return { ...frete, endereco, status: updatedStatus }
                     })
-                );
+                )
 
                 fretesComEndereco.sort((a, b) => {
                     const statusOrder = (status: string) => {
-                        if (status === 'ok' || status === 'open') return 1;
-                        return 0;
-                    };
+                        if (status === 'ok' || status === 'open') return 1
+                        return 0
+                    }
 
-                    const aStatus = statusOrder(a.status);
-                    const bStatus = statusOrder(b.status);
+                    const aStatus = statusOrder(a.status)
+                    const bStatus = statusOrder(b.status)
 
                     if (aStatus !== bStatus) {
-                        return bStatus - aStatus;
+                        return bStatus - aStatus
                     } else {
                         const aDate = a.date
                             ? (a.date instanceof Timestamp ? a.date.toDate() : new Date(a.date))
-                            : new Date(0);
+                            : new Date(0)
 
                         const bDate = b.date
                             ? (b.date instanceof Timestamp ? b.date.toDate() : new Date(b.date))
-                            : new Date(0);
+                            : new Date(0)
 
-                        return bDate.getTime() - aDate.getTime();
+                        return bDate.getTime() - aDate.getTime()
                     }
-                });
+                })
 
 
-                setFretes(fretesComEndereco);
+                setFretes(fretesComEndereco)
             } catch (err) {
-                console.error("Erro ao buscar fretes:", err);
+                console.error("Erro ao buscar fretes:", err)
             } finally {
-                setLoading(false);
+                setLoading(false)
             }
-        };
+        }
 
-        fetchFretes();
-    }, [uid, refreshKey]);
+        fetchFretes()
+    }, [uid, refreshKey])
 
 
 
     if (loading) {
-        return <ActivityIndicator style={{ marginTop: 20 }} />;
+        return <ActivityIndicator style={{ marginTop: 20 }} />
     }
 
     return (
@@ -187,21 +153,21 @@ export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
                 </Pressable>
             ))}
         </ScrollView>
-    );
+    )
 }
 
 function formatDate(date: Timestamp | string): string {
     try {
-        const jsDate = typeof date === "string" ? new Date(date) : date.toDate();
+        const jsDate = typeof date === "string" ? new Date(date) : date.toDate()
         return jsDate.toLocaleDateString("pt-BR", {
             day: "2-digit",
             month: "2-digit",
             year: "numeric",
             hour: "2-digit",
             minute: "2-digit",
-        });
+        })
     } catch {
-        return "Data inválida";
+        return "Data inválida"
     }
 }
 
@@ -227,4 +193,4 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginBottom: 10,
     }
-});
+})
