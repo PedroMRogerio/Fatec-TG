@@ -94,7 +94,7 @@ export function FreteSearchCard() {
                     key={frete.id}
                     onPress={() =>
                         router.push({
-                            pathname: "/frete-view",
+                            pathname: "/content/frete-view",
                             params: { ...frete },
                         })
                     }
