@@ -1,11 +1,9 @@
-import { View, StyleSheet, Text, ScrollView, Dimensions } from "react-native";
+import { View, StyleSheet, Text, ScrollView } from "react-native";
 import { useUser } from "@/contexts/userContext";
 import FreteCardList from "@/components/frete/freteCard";
 import ProvCardList from "@/components/frete/provCard";
 import { useFocusEffect } from "@react-navigation/native";
 import React, { useState, useCallback } from "react";
-
-const { width } = Dimensions.get("window");
 
 export default function Home() {
     const { user } = useUser();

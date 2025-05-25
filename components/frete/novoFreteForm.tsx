@@ -52,7 +52,7 @@ export default function NovoFreteForm() {
         try {
             await addDoc(collection(db, "Frete"), freteData);
             Alert.alert("Sucesso", "Frete criado com sucesso!");
-            router.push('/home')
+            router.push('/content/home')
         } catch (error) {
             console.error("Erro ao criar frete: ", error);
             Alert.alert("Erro", "Não foi possível criar o frete.");

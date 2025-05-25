@@ -120,7 +120,7 @@ export default function ProvCardList({ uid, refreshKey }: ProvCardListProps) {
             {fretes.map((frete) => (
                 <Pressable key={frete.id} onPress={() =>
                     router.push({
-                        pathname: "/frete-view",
+                        pathname: "/content/frete-view",
                         params: { ...frete },
                     })
                 }>
