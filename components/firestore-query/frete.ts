@@ -44,12 +44,22 @@ export default class FreteQuery {
   }
 
   static async updateFreteStatus(freteId: string, status: string) {
-  try {
-    const freteDoc = doc(db, 'Frete', freteId)
-    await updateDoc(freteDoc, { status })
-    console.log(`Status do frete ${freteId} atualizado para ${status}`)
-  } catch (error) {
-    console.error(`Erro ao atualizar status do frete ${freteId}:`, error)
+    try {
+      const freteDoc = doc(db, 'Frete', freteId)
+      await updateDoc(freteDoc, { status })
+      //console.log(`Status do frete ${freteId} atualizado para ${status}`)
+    } catch (error) {
+      console.error(`Erro ao atualizar status do frete ${freteId}:`, error)
+    }
   }
-}
+
+  static async ConfirmFreteProv(freteId: string, uidProv: string, plate: string, price: number) {
+    try {
+      const freteDoc = doc(db, 'Frete', freteId )
+      await updateDoc(freteDoc, { uidProv, plate, price })
+      //console.log(`Status do frete ${freteId} atualizado para ${status}`)
+    } catch (error) {
+      console.error(`Erro ao atualizar status do frete ${freteId}:`, error)
+    }
+  }
 }

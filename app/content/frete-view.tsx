@@ -1,17 +1,22 @@
 import RouteMap from "@/components/maps/route-map"
-import React from "react"
+import React, { useState } from "react"
 import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Dimensions } from "react-native"
 import { useLocalSearchParams, useRouter } from "expo-router"
 import { IAddress } from "@/components/interfaces/schedule"
 import { useUser } from "@/contexts/userContext"
+import FreteQuery from "@/components/firestore-query/frete"
 
 export default function FreteView() {
     const params = useLocalSearchParams()
     const router = useRouter()
     const { user } = useUser();
+    const [loading, setLoading] = useState(false)
 
     const org = typeof params.org === 'string' ? params.org.split(',') : []
     const dst = typeof params.dst === 'string' ? params.dst.split(',') : []
+    const id = typeof params.id === 'string' ? params.id : ''
+    
+    const status = typeof params.status === 'string' ? params.status : '';
 
     const origin: IAddress = {
         lat: Number(org[0]),
@@ -25,6 +30,21 @@ export default function FreteView() {
     const { height } = Dimensions.get('window')
     const mapHeight = height * 0.75
 
+    async function CancelFrete() {
+        if (loading) return;
+        setLoading(true);
+        try {
+            await FreteQuery.updateFreteStatus(id, 'cancel')
+            alert('Frete Cancelado!')
+            router.push('/content/home')
+        } catch (e) {
+            console.log('ERRO: ' + e)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={[styles.mapContainer, { height: mapHeight }]}>
@@ -35,13 +55,13 @@ export default function FreteView() {
                 <TouchableOpacity style={[styles.button, styles.backButton]} onPress={() => router.back()}>
                     <Text style={styles.backButtonText}>Voltar</Text>
                 </TouchableOpacity>
-                {user?.uType === 'prov' && (
+                {user?.uType === 'prov' && status !== 'cancel' && status !== 'overdue' && (
                     <TouchableOpacity style={[styles.button, styles.confirmButton]} onPress={() => alert('Frete confirmado!')}>
                         <Text style={styles.confirmButtonText}>Confirmar Frete</Text>
                     </TouchableOpacity>
                 )}
-                {user?.uType === 'cli' && (
-                    <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={() => alert('Frete confirmado!')}>
+                {user?.uType === 'cli' && status !== 'cancel' && status !== 'overdue' && (
+                    <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={CancelFrete}>
                         <Text style={styles.confirmButtonText}>Cancelar Frete</Text>
                     </TouchableOpacity>
                 )}
