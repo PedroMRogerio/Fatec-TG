@@ -1,48 +1,48 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
-import { useUser } from "@/contexts/userContext";
-import VehicleQuery from "@/components/firestore-query/vehicle";
-import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react"
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native"
+import { useUser } from "@/contexts/userContext"
+import VehicleQuery from "@/components/firestore-query/vehicle"
+import { useRouter } from "expo-router"
 
 interface IVehicle {
-    id: string;
-    [key: string]: any;
+    id: string
+    [key: string]: any
 }
 
 export default function Usuario() {
-    const { user } = useUser();
-    const [vehicles, setVehicles] = useState<IVehicle[]>([]);
-    const router = useRouter();
+    const { user } = useUser()
+    const [vehicles, setVehicles] = useState<IVehicle[]>([])
+    const router = useRouter()
 
     function vType(type: string) {
         switch (type) {
             case "large":
-                return "Grande";
+                return "Grande"
             case "medium":
-                return "Médio";
+                return "Médio"
             case "small":
-                return "Pequeno";
+                return "Pequeno"
             default:
-                return "???";
+                return "???"
         }
     }
 
     useEffect(() => {
         const fetchVehicles = async () => {
             if (user?.uid) {
-                const result = await VehicleQuery.getVehicle(user.uid);
-                setVehicles(result);
+                const result = await VehicleQuery.getVehicle(user.uid)
+                setVehicles(result)
             }
-        };
-        fetchVehicles();
-    }, [user]);
+        }
+        fetchVehicles()
+    }, [user])
 
     if (!user) {
         return (
             <View style={styles.container}>
                 <Text style={styles.error}>Usuário não encontrado no contexto.</Text>
             </View>
-        );
+        )
     }
 
     return (
@@ -101,7 +101,7 @@ export default function Usuario() {
                 <Text style={styles.backButtonText}>Voltar</Text>
             </Pressable>
         </ScrollView>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -161,4 +161,4 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#333",
     },
-});
+})

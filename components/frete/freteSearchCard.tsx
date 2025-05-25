@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable } from "react-native";
-import FreteQuery from "@/components/firestore-query/frete";
-import { Timestamp } from "firebase/firestore";
-import { Dimensions } from "react-native";
-import { getEndereco } from "@/components/maps/address-name";
-import { useRouter } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
-import { CardColor, CardColor2 } from "./cardColor";
-import { freteCardsStyle } from "../styles/colorStyles";
+import React, { useEffect, useState } from "react"
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable } from "react-native"
+import FreteQuery from "@/components/firestore-query/frete"
+import { Timestamp } from "firebase/firestore"
+import { Dimensions } from "react-native"
+import { getEndereco } from "@/components/maps/address-name"
+import { useRouter } from "expo-router"
+import { LinearGradient } from "expo-linear-gradient"
+import { CardColor, CardColor2 } from "./cardColor"
+import { freteCardsStyle } from "../styles/colorStyles"
 
-const { width } = Dimensions.get("window");
+const { width } = Dimensions.get("window")
 
 interface FreteItem {
     id: string
@@ -17,74 +17,73 @@ interface FreteItem {
     [key: string]: any
 }
 
-
 export function FreteSearchCard() {
-    const [fretes, setFretes] = useState<FreteItem[]>([]);
-    const [loading, setLoading] = useState(true);
-    const router = useRouter();
+    const [fretes, setFretes] = useState<FreteItem[]>([])
+    const [loading, setLoading] = useState(true)
+    const router = useRouter()
 
     useEffect(() => {
         const fetchFretes = async () => {
-            setLoading(true);
+            setLoading(true)
             try {
-                const results = await FreteQuery.getFreteAll();
+                const results = await FreteQuery.getFreteAll('small')
 
                 const fretesComEndereco = await Promise.all(
                     results.map(async (frete: FreteItem) => {
-                        let endereco = "Coordenadas não disponíveis";
+                        let endereco = "Coordenadas não disponíveis"
                         if (frete.dst && Array.isArray(frete.dst) && frete.dst.length >= 2) {
-                            endereco = await getEndereco(frete.dst[0], frete.dst[1]);
+                            endereco = await getEndereco(frete.dst[0], frete.dst[1])
                         }
-                        return { ...frete, endereco };
+                        return { ...frete, endereco }
                     })
-                );
+                )
 
-                setFretes(fretesComEndereco);
+                setFretes(fretesComEndereco)
             } catch (err) {
-                console.error("Erro ao buscar fretes:", err);
+                console.error("Erro ao buscar fretes:", err)
             } finally {
-                setLoading(false);
+                setLoading(false)
             }
-        };
+        }
 
-        fetchFretes();
-    }, []);
+        fetchFretes()
+    }, [])
 
     function statusName(status: string) {
         switch (status) {
             case "closed":
-                return "Concluído";
+                return "Concluído"
             case "ok":
-                return "Preparado";
+                return "Preparado"
             case "open":
-                return "Procurando provedor...";
+                return "Procurando provedor..."
             case "cancel":
-                return "Cancelado";
+                return "Cancelado"
             case "overdue":
-                return "Vencido";
+                return "Vencido"
             default:
-                return "Indefinido";
+                return "Indefinido"
         }
     }
 
     function formatDate(date: Timestamp | string | undefined): string {
         try {
-            if (!date) return "Data inválida";
-            const jsDate = typeof date === "string" ? new Date(date) : date.toDate();
+            if (!date) return "Data inválida"
+            const jsDate = typeof date === "string" ? new Date(date) : date.toDate()
             return jsDate.toLocaleDateString("pt-BR", {
                 day: "2-digit",
                 month: "2-digit",
                 year: "numeric",
                 hour: "2-digit",
                 minute: "2-digit",
-            });
+            })
         } catch {
-            return "Data inválida";
+            return "Data inválida"
         }
     }
 
     if (loading) {
-        return <ActivityIndicator style={{ marginTop: 20 }} />;
+        return <ActivityIndicator style={{ marginTop: 20 }} />
     }
 
     return (
@@ -125,7 +124,7 @@ export function FreteSearchCard() {
                 </Pressable>
             ))}
         </ScrollView>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -142,4 +141,4 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginBottom: 10,
     },
-});
+})

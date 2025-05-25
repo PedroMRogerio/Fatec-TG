@@ -30,8 +30,21 @@ export default class FreteQuery {
     return doc
   }
 
-  static async getFreteAll() {
-    const q = query(colRef, where('status', '==', 'open'))
+  static async getFreteAll(type: string) {
+    let q
+    switch (type) {
+      case 'large':
+        q = query(colRef, where('status', '==', 'open'))
+        break
+      case 'medium':
+        q = query(colRef, where('status', '==', 'open'), where('status', 'in', ['small', 'medium']))
+        break
+      case 'small':
+        q = query(colRef, where('status', '==', 'open'), where('status', '==', 'small'))
+        break
+      default:
+        q = query(colRef, where('status', '==', 'open'))
+    }
     const snapshot = await getDocs(q)
     if (snapshot.empty) return []
 
@@ -55,7 +68,7 @@ export default class FreteQuery {
 
   static async ConfirmFreteProv(freteId: string, uidProv: string, plate: string, price: number) {
     try {
-      const freteDoc = doc(db, 'Frete', freteId )
+      const freteDoc = doc(db, 'Frete', freteId)
       await updateDoc(freteDoc, { uidProv, plate, price })
       //console.log(`Status do frete ${freteId} atualizado para ${status}`)
     } catch (error) {

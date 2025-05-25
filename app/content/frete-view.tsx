@@ -44,6 +44,20 @@ export default function FreteView() {
         }
     }
 
+    async function ProvConfirmFrete() {
+        if (loading) return;
+        setLoading(true);
+        try {
+            //await FreteQuery.ConfirmFreteProv(id, )
+            alert('Frete Cancelado!')
+            router.push('/content/home')
+        } catch (e) {
+            console.log('ERRO: ' + e)
+        } finally {
+            setLoading(false)
+        }
+    }
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -56,7 +70,7 @@ export default function FreteView() {
                     <Text style={styles.backButtonText}>Voltar</Text>
                 </TouchableOpacity>
                 {user?.uType === 'prov' && status !== 'cancel' && status !== 'overdue' && (
-                    <TouchableOpacity style={[styles.button, styles.confirmButton]} onPress={() => alert('Frete confirmado!')}>
+                    <TouchableOpacity style={[styles.button, styles.confirmButton]} onPress={ProvConfirmFrete}>
                         <Text style={styles.confirmButtonText}>Confirmar Frete</Text>
                     </TouchableOpacity>
                 )}

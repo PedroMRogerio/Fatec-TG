@@ -1,19 +1,19 @@
-import { View, StyleSheet, Text, ScrollView } from "react-native";
-import { useUser } from "@/contexts/userContext";
-import FreteCardList from "@/components/frete/freteCard";
-import ProvCardList from "@/components/frete/provCard";
-import { useFocusEffect } from "@react-navigation/native";
-import React, { useState, useCallback } from "react";
+import { View, StyleSheet, Text, ScrollView } from "react-native"
+import { useUser } from "@/contexts/userContext"
+import FreteCardList from "@/components/frete/freteCard"
+import ProvCardList from "@/components/frete/provCard"
+import { useFocusEffect } from "@react-navigation/native"
+import React, { useState, useCallback } from "react"
 
 export default function Home() {
-    const { user } = useUser();
-    const [refreshKey, setRefreshKey] = useState(0);
+    const { user } = useUser()
+    const [refreshKey, setRefreshKey] = useState(0)
 
     useFocusEffect(
         useCallback(() => {
-            setRefreshKey(prev => prev + 1);
+            setRefreshKey(prev => prev + 1)
         }, [])
-    );
+    )
 
     return (
         <View style={styles.container}>
@@ -37,7 +37,7 @@ export default function Home() {
 
             
         </View>
-    );
+    )
 }
 
 export const styles = StyleSheet.create({
@@ -66,4 +66,4 @@ export const styles = StyleSheet.create({
     separador2: {
         height: 20,
     },
-});
+})
