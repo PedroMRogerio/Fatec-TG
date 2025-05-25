@@ -13,11 +13,12 @@ interface Coordinates {
 interface RouteMapProps {
   origin: Coordinates
   destination: Coordinates
+  onDistanceChange?: (distance: number) => void
 }
 
 const GOOGLE_MAPS_API_KEY = process.env.EXPO_PUBLIC_API_KEY ? process.env.EXPO_PUBLIC_API_KEY : '';
 
-const RouteMap: React.FC<RouteMapProps> = ({ origin, destination }) => {
+const RouteMap: React.FC<RouteMapProps> = ({ origin, destination, onDistanceChange }) => {
   const [distance, setDistance] = useState<number | null>(null);
   const [duration, setDuration] = useState<number | null>(null);
   
@@ -72,10 +73,14 @@ const RouteMap: React.FC<RouteMapProps> = ({ origin, destination }) => {
           destination={{ latitude: destination.lat, longitude: destination.lng }}
           apikey={GOOGLE_MAPS_API_KEY}
           strokeWidth={5}
+          mode="DRIVING"
           strokeColor={trackStyles.history}
           onReady={result => {
-            setDistance(result.distance);
-            setDuration(result.duration);
+            setDistance(result.distance)
+            setDuration(result.duration)
+            if (onDistanceChange) {
+              onDistanceChange(result.distance)
+            }
           }}
         />
       </MapView>

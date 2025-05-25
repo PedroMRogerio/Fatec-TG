@@ -94,6 +94,7 @@ const RouteMapTrack: React.FC<RouteMapProps> = ({ destination }) => {
                     origin={{ latitude: currentLocation.lat, longitude: currentLocation.lng }}
                     destination={{ latitude: destination.lat, longitude: destination.lng }}
                     apikey={GOOGLE_MAPS_API_KEY}
+                    mode="DRIVING"
                     strokeWidth={5}
                     strokeColor={trackStyles.active}
                 />

@@ -1,5 +1,5 @@
-import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import { useRouter } from "expo-router"
+import React, { useState } from "react"
 import { useUser } from "@/contexts/userContext"
 import {
     View,
@@ -8,13 +8,13 @@ import {
     StyleSheet,
     Pressable,
     Alert,
-} from "react-native";
-import { db } from "@/helpers/firebaseConfig";
-import { addDoc, collection } from "firebase/firestore";
-import { Picker } from "@react-native-picker/picker";
+} from "react-native"
+import { db } from "@/helpers/firebaseConfig"
+import { addDoc, collection } from "firebase/firestore"
+import { Picker } from "@react-native-picker/picker"
 
 export default function CriarVeiculo() {
-    const router = useRouter();
+    const router = useRouter()
     const { user } = useUser()
     const [loading, setLoading] = useState(false)
     const [form, setForm] = useState({
@@ -24,7 +24,7 @@ export default function CriarVeiculo() {
         fixedPrice: 0,
         variablePrice: 0,
         uid: user?.uid
-    });
+    })
     const handleConfirmSave = () => {
         Alert.alert(
             "Confirmar cadastro",
@@ -33,8 +33,8 @@ export default function CriarVeiculo() {
                 { text: "Cancelar", style: "cancel" },
                 { text: "Sim", onPress: handleSave },
             ]
-        );
-    };
+        )
+    }
 
     const handleSave = async () => {
         try {
@@ -47,15 +47,15 @@ export default function CriarVeiculo() {
                 fixedPrice: form.fixedPrice,
                 variablePrice: form.variablePrice,
                 uid: form.uid
-            });
-            Alert.alert("Sucesso", "Veículo cadastrado!");
-            router.back();
+            })
+            Alert.alert("Sucesso", "Veículo cadastrado!")
+            router.back()
         } catch (error) {
-            Alert.alert("Erro", "Falha ao cadastrar veículo.");
+            Alert.alert("Erro", "Falha ao cadastrar veículo.")
         } finally{
             setLoading(false)
         }
-    };
+    }
 
     return (
         <View style={styles.container}>
@@ -119,7 +119,7 @@ export default function CriarVeiculo() {
                 <Text style={styles.backButtonText}>Voltar</Text>
             </Pressable>
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -178,4 +178,4 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#333",
     },
-});
+})

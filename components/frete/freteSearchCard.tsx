@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable } from "react-native"
+import { Picker } from "@react-native-picker/picker"
 import FreteQuery from "@/components/firestore-query/frete"
 import { Timestamp } from "firebase/firestore"
 import { Dimensions } from "react-native"
@@ -8,25 +9,53 @@ import { useRouter } from "expo-router"
 import { LinearGradient } from "expo-linear-gradient"
 import { CardColor, CardColor2 } from "./cardColor"
 import { freteCardsStyle } from "../styles/colorStyles"
+import VehicleQuery from "@/components/firestore-query/vehicle"
+import { useUser } from "@/contexts/userContext"
 
 const { width } = Dimensions.get("window")
 
 interface FreteItem {
     id: string
-    date?: Timestamp // ou string
+    date?: Timestamp
+    [key: string]: any
+}
+
+interface VehicleItem {
+    id: string
     [key: string]: any
 }
 
 export function FreteSearchCard() {
     const [fretes, setFretes] = useState<FreteItem[]>([])
     const [loading, setLoading] = useState(true)
+    const [vehicles, setVehicles] = useState<VehicleItem[]>([])
+    const [selectedVehicle, setSelectedVehicle] = useState<VehicleItem | null>(null)
+    const [vehicleLoading, setVehicleLoading] = useState(true)
     const router = useRouter()
+    const { user } = useUser() // pega o usuário logado
+
+    useEffect(() => {
+        const fetchVehicles = async () => {
+            if (!user?.uid) return
+            try {
+                const results = await VehicleQuery.getVehicle(user.uid)
+                setVehicles(results)
+            } catch (err) {
+                console.error("Erro ao buscar veículos:", err)
+            } finally {
+                setVehicleLoading(false)
+            }
+        }
+
+        fetchVehicles()
+    }, [user])
 
     useEffect(() => {
         const fetchFretes = async () => {
+            if (!selectedVehicle) return
             setLoading(true)
             try {
-                const results = await FreteQuery.getFreteAll('small')
+                const results = await FreteQuery.getFreteAll(selectedVehicle.type)
 
                 const fretesComEndereco = await Promise.all(
                     results.map(async (frete: FreteItem) => {
@@ -47,7 +76,7 @@ export function FreteSearchCard() {
         }
 
         fetchFretes()
-    }, [])
+    }, [selectedVehicle])
 
     function statusName(status: string) {
         switch (status) {
@@ -82,20 +111,47 @@ export function FreteSearchCard() {
         }
     }
 
-    if (loading) {
+    if (vehicleLoading) {
         return <ActivityIndicator style={{ marginTop: 20 }} />
     }
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            {fretes.map((frete) => (
+            <Text style={styles.label}>Selecione um veículo:</Text>
+            <View style={styles.pickerContainer}>
+                <Picker
+                    selectedValue={selectedVehicle?.id || ""}
+                    onValueChange={(itemValue) => {
+                        const vehicle = vehicles.find(v => v.id === itemValue)
+                        setSelectedVehicle(vehicle || null)
+                    }}
+                >
+                    <Picker.Item label="-- Escolha um veículo --" value="" />
+                    {vehicles.map(vehicle => (
+                        <Picker.Item
+                            key={vehicle.id}
+                            label={vehicle?.plate || "Veículo"}
+                            value={vehicle.id}
+                        />
+                    ))}
+                </Picker>
+            </View>
+
+            {loading && selectedVehicle && <ActivityIndicator style={{ marginTop: 20 }} />}
+
+            {!loading && selectedVehicle && fretes.map((frete) => (
                 <Pressable
                     key={frete.id}
                     onPress={() =>
                         router.push({
                             pathname: "/content/frete-view",
-                            params: { ...frete },
+                            params: {
+                                ...frete,
+                                date: frete.date?.toDate().toISOString(), // transforma Timestamp em string
+                                veiculoSelecionado: JSON.stringify(selectedVehicle),
+                            },
                         })
+                        
                     }
                 >
                     <View style={freteCardsStyle.default}>
@@ -140,5 +196,17 @@ const styles = StyleSheet.create({
     date: {
         fontSize: 15,
         marginBottom: 10,
+    },
+    label: {
+        fontSize: 16,
+        fontWeight: "600",
+        marginBottom: 5,
+    },
+    pickerContainer: {
+        marginBottom: 20,
+        borderColor: "#ccc",
+        borderWidth: 1,
+        borderRadius: 5,
+        overflow: "hidden",
     },
 })
