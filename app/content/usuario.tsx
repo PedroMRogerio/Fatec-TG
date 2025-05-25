@@ -76,7 +76,7 @@ export default function Usuario() {
                                 style={styles.vehicleCard}
                                 onPress={() =>
                                     router.push({
-                                        pathname: "/editarVeiculo",
+                                        pathname: "/content/editarVeiculo",
                                         params: { ...vehicle },
                                     })
                                 }
@@ -91,7 +91,7 @@ export default function Usuario() {
                     ) : (
                         <Text style={styles.value}>Nenhum veículo encontrado.</Text>
                     )}
-                    <Pressable style={styles.backButton} onPress={() => router.push({pathname:'/criarVeiculo'})}>
+                    <Pressable style={styles.backButton} onPress={() => router.push({pathname:'/content/criarVeiculo'})}>
                         <Text style={styles.backButtonText}>Adicionar Veículo</Text>
                     </Pressable>
 

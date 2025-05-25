@@ -27,12 +27,12 @@ export default function Index() {
 
       if (user) {
         setUser({ uid, email, uType: 'cli', ...user });
-        router.push('/home');
+        router.push('/content/home');
       } else {
         const provUser = await UserProvQuery.getUser(uid) as UserData
         if (provUser) {
           router.push({
-            pathname: '/criarusuario',
+            pathname: '/content/criarusuario',
             params: {
               uid,
               email,
@@ -45,7 +45,7 @@ export default function Index() {
           });
         } else {
           router.push({
-            pathname: '/criarusuario',
+            pathname: '/content/criarusuario',
             params: {
               uid,
               email,
@@ -70,12 +70,12 @@ export default function Index() {
 
       if (user) {
         setUser({ uid, email, uType: 'prov', ...user });
-        router.push('/home');
+        router.push('/content/home');
       } else {
         const cliUser = await UserCliQuery.getUser(uid) as UserData
         if (cliUser) {
           router.push({
-            pathname: '/criarusuario',
+            pathname: '/content/criarusuario',
             params: {
               uid,
               email,
@@ -88,7 +88,7 @@ export default function Index() {
           });
         } else {
           router.push({
-            pathname: '/criarusuario',
+            pathname: '/content/criarusuario',
             params: {
               uid,
               email,

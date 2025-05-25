@@ -44,26 +44,26 @@ export default function Home() {
             </ScrollView>
 
             <View style={styles.view2}>
-                <Link href="/usuario" asChild>
+                <Link href="/content/usuario" asChild>
                     <Pressable style={styles.botoes}>
                         <Image source={userButton} style={styles.icon} />
                     </Pressable>
                 </Link>
                 {user?.uType === 'prov' && (
-                <Link href="/frete-buscar" asChild>
+                <Link href="/content/frete-buscar" asChild>
                     <Pressable style={styles.botoes2}>
                         <Image source={searchButton} style={styles.icon} />
                     </Pressable>
                 </Link>
                 )}
                 {user?.uType === 'cli' && (
-                <Link href="/novoFrete" asChild>
+                <Link href="/content/novoFrete" asChild>
                     <Pressable style={styles.botoes2}>
                         <Image source={newFreteButton} style={styles.icon} />
                     </Pressable>
                 </Link>
                 )}
-                <Link href="/config" asChild>
+                <Link href="/content/config" asChild>
                     <Pressable style={styles.botoes}>
                         <Image source={configButton} style={styles.icon} />
                     </Pressable>
