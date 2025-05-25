@@ -18,6 +18,7 @@ export default function FreteView() {
     const status = typeof params.status === 'string' ? params.status : ''
     const dateString = typeof params.date === 'string' ? params.date : ''
     const date = dateString ? new Date(dateString) : undefined
+    const price = typeof params.price === 'string' ? params.price : ''
 
     // Coordenadas de origem e destino
     const org = typeof params.org === 'string' ? params.org.split(',') : []
@@ -56,7 +57,7 @@ export default function FreteView() {
     }
 
     const { height } = Dimensions.get('window')
-    const mapHeight = height * 0.75
+    const mapHeight = height * 0.65
 
     async function CancelFrete() {
         if (loading) return
@@ -76,8 +77,8 @@ export default function FreteView() {
 
         Alert.alert(
             "Confirmar Frete",
-            "Distância: " + (distance?distance:1).toFixed(1) + "km\n" +
-            "Preço: R$" + (veiculoSelecionado?.fixedPrice + (veiculoSelecionado?.variablePrice * (distance?distance:1))).toFixed(2),
+            "Distância: " + (distance ? distance : 1).toFixed(1) + "km\n" +
+            "Preço: R$" + (veiculoSelecionado?.fixedPrice + (veiculoSelecionado?.variablePrice * (distance ? distance : 1))).toFixed(2),
             [
                 { text: "Cancelar", style: "cancel" },
                 { text: "Confirmar", onPress: ProvConfirmFrete },
@@ -87,9 +88,9 @@ export default function FreteView() {
     async function ProvConfirmFrete() {
         if (loading) return
         setLoading(true)
-        let cost: number = (veiculoSelecionado?.fixedPrice + (veiculoSelecionado?.variablePrice * (distance?distance:1))).toFixed(2)
+        let cost: number = (veiculoSelecionado?.fixedPrice + (veiculoSelecionado?.variablePrice * (distance ? distance : 1))).toFixed(2)
         try {
-            await FreteQuery.ConfirmFreteProv(id, user?.uid?user.uid:'', veiculoSelecionado?.plate, cost)
+            await FreteQuery.ConfirmFreteProv(id, user?.uid ? user.uid : '', veiculoSelecionado?.plate, cost)
 
             alert('Frete Confirmado!')
             router.push('/content/home')
@@ -109,9 +110,14 @@ export default function FreteView() {
                     onDistanceChange={setDistance}
                 />
             </View>
-
+            {price == null && (
+            <View style={styles.infoContainer}>
+                <Text style={styles.priceLabel}>Preço do Frete: R$</Text>
+                <Text style={styles.priceText}>{price}</Text>
+            </View>
+            )}
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={[styles.button, styles.backButton]} onPress={() => router.back()}>
+                <TouchableOpacity style={[styles.button, styles.backButton]} onPress={() => {router.back()}}>
                     <Text style={styles.backButtonText}>Voltar</Text>
                 </TouchableOpacity>
 
@@ -121,7 +127,7 @@ export default function FreteView() {
                     </TouchableOpacity>
                 )}
 
-                {user?.uType === 'cli' && status !== 'cancel' && status !== 'overdue' && (
+                {user?.uType === 'cli' && status !== 'cancel' && status !== 'overdue' && status !== 'closed' &&(
                     <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={CancelFrete}>
                         <Text style={styles.confirmButtonText}>Cancelar Frete</Text>
                     </TouchableOpacity>
@@ -142,6 +148,14 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         borderColor: '#ccc',
         borderWidth: 3,
+    },
+    infoContainer: {
+        flexDirection:'row',
+        alignItems: 'center',
+        marginTop: 10,
+        borderRadius: 10,
+        borderColor: '#ccc',
+        borderWidth: 2,
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -167,6 +181,15 @@ const styles = StyleSheet.create({
     backButtonText: {
         color: '#333',
         fontWeight: 'bold',
+    },
+    priceText: {
+        fontSize:18,
+        fontWeight:'bold',
+        marginLeft:5,
+    },
+    priceLabel: {
+        fontSize:15,
+        marginLeft:5,
     },
     confirmButtonText: {
         color: '#fff',
