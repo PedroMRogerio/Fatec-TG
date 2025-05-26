@@ -97,9 +97,9 @@ export default function Usuario() {
 
                 </View>
             )}
-            <Pressable style={styles.backButton} onPress={() => router.back()}>
+            {/*<Pressable style={styles.backButton} onPress={() => router.back()}>
                 <Text style={styles.backButtonText}>Voltar</Text>
-            </Pressable>
+            </Pressable>*/}
         </ScrollView>
     )
 }

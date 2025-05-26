@@ -107,7 +107,7 @@ export default function Index() {
 
   return (
     <View style={styles.view}>
-      <Image source={require('@/assets/images/teste.png')} style={{ alignSelf: 'center', height: 75, width: 75 }} />
+      <Image source={require('@/assets/images/logo.png')} style={{ alignSelf: 'center', height: 75, width: 75 }} />
       <View>
         <Text style={styles.titulo}>Faça o login para continuar</Text>
         <Text style={styles.texto}>Login</Text>
