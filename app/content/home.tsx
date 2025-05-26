@@ -35,7 +35,7 @@ export default function Home() {
                 <View style={styles.separador2}></View>
             </ScrollView>
 
-            
+
         </View>
     )
 }
@@ -44,7 +44,7 @@ export const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor:'#EBF5FF'
+        backgroundColor: '#EBF5FF'
     },
     scrollContent: {
         padding: 10,

@@ -32,7 +32,7 @@ export default function Index() {
         const provUser = await UserProvQuery.getUser(uid) as UserData
         if (provUser) {
           router.push({
-            pathname: '/content/criarusuario',
+            pathname: '/criarusuario',
             params: {
               uid,
               email,
@@ -45,7 +45,7 @@ export default function Index() {
           });
         } else {
           router.push({
-            pathname: '/content/criarusuario',
+            pathname: '/criarusuario',
             params: {
               uid,
               email,
@@ -75,7 +75,7 @@ export default function Index() {
         const cliUser = await UserCliQuery.getUser(uid) as UserData
         if (cliUser) {
           router.push({
-            pathname: '/content/criarusuario',
+            pathname: '/criarusuario',
             params: {
               uid,
               email,
@@ -88,7 +88,7 @@ export default function Index() {
           });
         } else {
           router.push({
-            pathname: '/content/criarusuario',
+            pathname: '/criarusuario',
             params: {
               uid,
               email,

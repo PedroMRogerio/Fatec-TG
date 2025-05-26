@@ -91,6 +91,32 @@ export default function FreteView() {
         let cost: number = (veiculoSelecionado?.fixedPrice + (veiculoSelecionado?.variablePrice * (distance ? distance : 1))).toFixed(2)
         try {
             await FreteQuery.ConfirmFreteProv(id, user?.uid ? user.uid : '', veiculoSelecionado?.plate, cost)
+            alert('Frete Confirmado!')
+            router.push('/content/home')
+        } catch (e) {
+            console.log('ERRO: ' + e)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleBeginFrete = () => {
+
+        Alert.alert(
+            "Iniciar viagem",
+            "Estamos com a carga! Podemos partir?",
+            [
+                { text: "Cancelar", style: "cancel" },
+                { text: "Confirmar", onPress: ProvBeginFrete },
+            ]
+        )
+    }
+    async function ProvBeginFrete() {
+        if (loading) return
+        setLoading(true)
+        let cost: number = (veiculoSelecionado?.fixedPrice + (veiculoSelecionado?.variablePrice * (distance ? distance : 1))).toFixed(2)
+        try {
+            await FreteQuery.updateFreteStatus(id, 'route')
 
             alert('Frete Confirmado!')
             router.push('/content/home')
@@ -101,6 +127,7 @@ export default function FreteView() {
         }
     }
 
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={[styles.mapContainer, { height: mapHeight }]}>
@@ -110,7 +137,7 @@ export default function FreteView() {
                     onDistanceChange={setDistance}
                 />
             </View>
-            {price == null && (
+            {price !== null && (
             <View style={styles.infoContainer}>
                 <Text style={styles.priceLabel}>Preço do Frete: R$</Text>
                 <Text style={styles.priceText}>{price}</Text>
@@ -128,7 +155,7 @@ export default function FreteView() {
                 )}
 
                 {user?.uType === 'prov' && status === 'ok' && (
-                    <TouchableOpacity style={[styles.button, styles.routeButton]} onPress={() => console.log('começar viadage')}>
+                    <TouchableOpacity style={[styles.button, styles.routeButton]} onPress={handleBeginFrete}>
                         <Text style={styles.confirmButtonText}>Iniciar Viagem</Text>
                     </TouchableOpacity>
                 )}
