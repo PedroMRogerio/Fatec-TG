@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { View, Text, TextInput, StyleSheet, Pressable } from "react-native"
 import { router, useLocalSearchParams } from "expo-router"
-import { newUserCli, newUserProv, NewUserCliProps, NewUserProvProps } from "@/components/login-functions/create-user"
+import { newUserCli, newUserProv } from "@/components/login-functions/create-user"
 
 export default function CriarUsuario() {
     const { uid, email, existingUType, targetUType, name, cpf, cnh } = useLocalSearchParams()

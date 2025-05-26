@@ -4,12 +4,12 @@ import FreteQuery from "@/components/firestore-query/frete"
 import { Timestamp } from "firebase/firestore"
 import { Dimensions } from "react-native"
 import { getEndereco } from "@/components/maps/address-name"
+import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from "expo-router"
-import { LinearGradient } from "expo-linear-gradient"
 import { CardColor, CardColor2 } from "./cardColor"
 import { freteCardsStyle } from "../styles/colorStyles"
 
-const { width } = Dimensions.get("window")
+const { width, height } = Dimensions.get("window")
 
 interface FreteItem {
     id: string
@@ -22,12 +22,12 @@ interface ProvCardListProps {
     refreshKey: number
 }
 
-export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
+export default function ProvCardList({ uid, refreshKey }: ProvCardListProps) {
     const [fretes, setFretes] = useState<FreteItem[]>([])
     const [loading, setLoading] = useState(true)
     const router = useRouter()
 
-    function statusName(status:string){
+    function statusName(status: string) {
         switch (status) {
             case 'closed':
                 return 'Concluído'
@@ -48,7 +48,7 @@ export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
         const fetchFretes = async () => {
             setLoading(true)
             try {
-                const results = await FreteQuery.getFrete(uid)
+                const results = await FreteQuery.getFreteProv(uid)
 
                 const fretesComEndereco = await Promise.all(
                     results.map(async (frete: FreteItem) => {
@@ -111,8 +111,6 @@ export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
         fetchFretes()
     }, [uid, refreshKey])
 
-
-
     if (loading) {
         return <ActivityIndicator style={{ marginTop: 20 }} />
     }
@@ -146,11 +144,12 @@ export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
                         />
                         <Text style={styles.title}>{frete.endereco}</Text>
                         <Text style={styles.date}>{formatDate(frete.date ? frete.date : '')}</Text>
-                        <Text style={[styles.date, {fontWeight:'bold'}]}>{statusName(frete.status)}</Text>
+                        <Text style={[styles.date, { fontWeight: 'bold' }]}>{statusName(frete.status)}</Text>
                     </View>
                 </Pressable>
-            ))}
-        </ScrollView>
+            ))
+            }
+        </ScrollView >
     )
 }
 

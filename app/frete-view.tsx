@@ -2,7 +2,7 @@ import RouteMap from "@/components/maps/route-map";
 import React from "react";
 import { SafeAreaView, View, Text } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-import { IEnd } from '@/components/maps/mockup-endereco/endereco'
+import { IAddress } from "@/components/interfaces/schedule";
 
 export default function FreteView() {
     const params = useLocalSearchParams();
@@ -10,11 +10,11 @@ export default function FreteView() {
     const org = typeof params.org === 'string' ? params.org.split(',') : []
     const dst = typeof params.dst === 'string' ? params.dst.split(',') : []
 
-    const origin: IEnd = {
+    const origin: IAddress = {
         lat: Number(org[0]),
         lng: Number(org[1]),
     }
-    const destination: IEnd = {
+    const destination: IAddress = {
         lat: Number(dst[0]),
         lng: Number(dst[1]),
     }

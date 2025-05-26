@@ -1,10 +1,27 @@
 import { Link } from "expo-router";
-import { View, StyleSheet, Text, Pressable, ScrollView } from "react-native";
+import { View, StyleSheet, Text, Pressable, ScrollView, Image, Dimensions } from "react-native";
 import { useUser } from "@/contexts/userContext";
 import FreteCardList from "@/components/frete/freteCard";
+import ProvCardList from "@/components/frete/provCard";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useState, useCallback } from "react";
+
+import userButton from "@/assets/images/userButton.png";
+import newFreteButton from "@/assets/images/newFreteButton.png";
+import searchButton from "@/assets/images/searchButton.png"
+import configButton from "@/assets/images/configButton.png";
+
+const { width } = Dimensions.get("window");
 
 export default function Home() {
     const { user } = useUser();
+    const [refreshKey, setRefreshKey] = useState(0);
+
+    useFocusEffect(
+        useCallback(() => {
+            setRefreshKey(prev => prev + 1);
+        }, [])
+    );
 
     return (
         <View style={styles.container}>
@@ -16,7 +33,12 @@ export default function Home() {
                 <View style={styles.sublinha}></View>
                 <Text style={styles.subtitulo}>Fretes:</Text>
 
-                <FreteCardList uid={user?.uid ? user.uid : ''} />
+                {user?.uType === 'prov' && (
+                    <ProvCardList uid={user?.uid ? user.uid : ''} refreshKey={refreshKey} />
+                )}
+                {user?.uType === 'cli' && (
+                    <FreteCardList uid={user?.uid ? user.uid : ''} refreshKey={refreshKey} />
+                )}
 
                 <View style={styles.separador2}></View>
             </ScrollView>
@@ -24,17 +46,26 @@ export default function Home() {
             <View style={styles.view2}>
                 <Link href="/usuario" asChild>
                     <Pressable style={styles.botoes}>
-                        <Text style={styles.textoBotoes}>Usuário</Text>
+                        <Image source={userButton} style={styles.icon} />
                     </Pressable>
                 </Link>
+                {user?.uType === 'prov' && (
+                <Link href="/frete-buscar" asChild>
+                    <Pressable style={styles.botoes2}>
+                        <Image source={searchButton} style={styles.icon} />
+                    </Pressable>
+                </Link>
+                )}
+                {user?.uType === 'cli' && (
                 <Link href="/novoFrete" asChild>
-                    <Pressable style={styles.botoes}>
-                        <Text style={styles.textoBotoes}>Novo Frete</Text>
+                    <Pressable style={styles.botoes2}>
+                        <Image source={newFreteButton} style={styles.icon} />
                     </Pressable>
                 </Link>
+                )}
                 <Link href="/config" asChild>
                     <Pressable style={styles.botoes}>
-                        <Text style={styles.textoBotoes}>Config.</Text>
+                        <Image source={configButton} style={styles.icon} />
                     </Pressable>
                 </Link>
             </View>
@@ -46,6 +77,7 @@ export const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
+        backgroundColor:'#EBF5FF'
     },
     scrollContent: {
         padding: 10,
@@ -82,15 +114,26 @@ export const styles = StyleSheet.create({
         paddingBottom: 10,
     },
     botoes: {
-        borderWidth: 1,
-        width: 50,
-        height: 50,
-        borderRadius: 50,
+        //borderWidth: 1,
+        width: width*0.12,
+        height: width*0.12,
+        //borderRadius: 50,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        overflow: 'hidden',
     },
-    textoBotoes: {
-        fontSize: 13,
-        fontWeight: 'bold'
-    }
+    botoes2: {
+        //borderWidth: 1,
+        width: width*0.15,
+        height: width*0.18,
+        //borderRadius: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+    },
+    icon: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'contain',
+    },
 });
