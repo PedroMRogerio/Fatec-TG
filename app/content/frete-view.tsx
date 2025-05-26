@@ -13,14 +13,12 @@ export default function FreteView() {
     const [loading, setLoading] = useState(false)
     const [distance, setDistance] = useState<number | null>(null)
 
-    // Desserializar valores básicos
     const id = typeof params.id === 'string' ? params.id : ''
     const status = typeof params.status === 'string' ? params.status : ''
     const dateString = typeof params.date === 'string' ? params.date : ''
     const date = dateString ? new Date(dateString) : undefined
     const price = typeof params.price === 'string' ? params.price : ''
 
-    // Coordenadas de origem e destino
     const org = typeof params.org === 'string' ? params.org.split(',') : []
     const dst = typeof params.dst === 'string' ? params.dst.split(',') : []
 
@@ -59,6 +57,19 @@ export default function FreteView() {
     const { height } = Dimensions.get('window')
     const mapHeight = height * 0.65
 
+
+    const handleCancelFrete = () => {
+
+        Alert.alert(
+            "Cancelar Frete",
+            "Tem certeza que deseja cancelar o frete?",
+            
+            [
+                { text: "Não", style: "cancel" },
+                { text: "Sim", onPress: CancelFrete },
+            ]
+        )
+    }
     async function CancelFrete() {
         if (loading) return
         setLoading(true)
@@ -138,33 +149,44 @@ export default function FreteView() {
                 />
             </View>
             {price !== null && (
-            <View style={styles.infoContainer}>
-                <Text style={styles.priceLabel}>Preço do Frete: R$</Text>
-                <Text style={styles.priceText}>{price}</Text>
-            </View>
+                <View style={styles.infoContainer}>
+                    <Text style={styles.priceLabel}>Preço do Frete: R$</Text>
+                    <Text style={styles.priceText}>{price}</Text>
+                </View>
             )}
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={[styles.button, styles.backButton]} onPress={() => {router.back()}}>
+                <TouchableOpacity style={[styles.button, styles.backButton]} onPress={() => { router.back() }}>
                     <Text style={styles.backButtonText}>Voltar</Text>
                 </TouchableOpacity>
 
+                {/*PROVEDOR ACEITA FRETE*/}
                 {user?.uType === 'prov' && status === 'open' && (
                     <TouchableOpacity style={[styles.button, styles.confirmButton]} onPress={handleConfirmFrete}>
                         <Text style={styles.confirmButtonText}>Confirmar Frete</Text>
                     </TouchableOpacity>
                 )}
 
+                {/*PROVEDOR INICIA VIAGEM ORIGEM -> DESTINO*/}
                 {user?.uType === 'prov' && status === 'ok' && (
                     <TouchableOpacity style={[styles.button, styles.routeButton]} onPress={handleBeginFrete}>
                         <Text style={styles.confirmButtonText}>Iniciar Viagem</Text>
                     </TouchableOpacity>
                 )}
 
-                {user?.uType === 'cli' && status !== 'cancel' && status !== 'overdue' && status !== 'closed' &&(
-                    <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={CancelFrete}>
+                {/*CLIENTE CANCELA FRETE*/}
+                {user?.uType === 'cli' && status !== 'cancel' && status !== 'overdue' && status !== 'closed' && status !== 'route' &&(
+                    <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={handleCancelFrete}>
                         <Text style={styles.confirmButtonText}>Cancelar Frete</Text>
                     </TouchableOpacity>
                 )}
+
+                {/*CLIENTE CONFIRMA CONCLUSAO FRETE*/}
+                {user?.uType === 'cli' && status === 'route' && (
+                    <TouchableOpacity style={[styles.button, styles.confirmButton]} onPress={()=>{console.log('foicarai')}}>
+                        <Text style={styles.confirmButtonText}>Confirmar Entrega</Text>
+                    </TouchableOpacity>
+                )}
+
             </View>
         </SafeAreaView>
     )
@@ -183,7 +205,7 @@ const styles = StyleSheet.create({
         borderWidth: 3,
     },
     infoContainer: {
-        flexDirection:'row',
+        flexDirection: 'row',
         alignItems: 'center',
         marginTop: 10,
         borderRadius: 10,
@@ -219,13 +241,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     priceText: {
-        fontSize:18,
-        fontWeight:'bold',
-        marginLeft:5,
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginLeft: 5,
     },
     priceLabel: {
-        fontSize:15,
-        marginLeft:5,
+        fontSize: 15,
+        marginLeft: 5,
     },
     confirmButtonText: {
         color: '#fff',
