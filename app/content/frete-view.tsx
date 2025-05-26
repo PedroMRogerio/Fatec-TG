@@ -18,6 +18,9 @@ export default function FreteView() {
     const dateString = typeof params.date === 'string' ? params.date : ''
     const date = dateString ? new Date(dateString) : undefined
     const price = typeof params.price === 'string' ? params.price : ''
+    const celNumbProv = typeof params.celNumbProv === 'string' ? params.celNumbProv : ''
+    const celNumbCli = typeof params.celNumbCli === 'string' ? params.celNumbCli : ''
+
 
     const org = typeof params.org === 'string' ? params.org.split(',') : []
     const dst = typeof params.dst === 'string' ? params.dst.split(',') : []
@@ -58,15 +61,41 @@ export default function FreteView() {
     const mapHeight = height * 0.65
 
 
+    const handleCloseFrete = () => {
+
+        Alert.alert(
+            "Frete Entregue",
+            "O frete chegou ao destino?",
+
+            [
+                { text: "Sim", onPress: CloseFrete },
+                { text: "Não", style: "cancel" },
+            ]
+        )
+    }
+    async function CloseFrete() {
+        if (loading) return
+        setLoading(true)
+        try {
+            await FreteQuery.updateFreteStatus(id, 'closed')
+            alert('Frete Entregue!')
+            router.push('/content/home')
+        } catch (e) {
+            console.log('ERRO: ' + e)
+        } finally {
+            setLoading(false)
+        }
+    }
+
     const handleCancelFrete = () => {
 
         Alert.alert(
             "Cancelar Frete",
             "Tem certeza que deseja cancelar o frete?",
-            
+
             [
-                { text: "Não", style: "cancel" },
                 { text: "Sim", onPress: CancelFrete },
+                { text: "Não", style: "cancel" },
             ]
         )
     }
@@ -84,15 +113,40 @@ export default function FreteView() {
         }
     }
 
-    const handleConfirmFrete = () => {
+    const handleProvCancelFrete = () => {
 
+        Alert.alert(
+            "Cancelar Frete",
+            "Tem certeza que deseja cancelar o frete?",
+
+            [
+                { text: "Sim", onPress: ProvCancelFrete },
+                { text: "Não", style: "cancel" },
+            ]
+        )
+    }
+    async function ProvCancelFrete() {
+        if (loading) return
+        setLoading(true)
+        try {
+            await FreteQuery.CancelFreteProv(id)
+            alert('Frete Cancelado!')
+            router.push('/content/home')
+        } catch (e) {
+            console.log('ERRO: ' + e)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleConfirmFrete = () => {
         Alert.alert(
             "Confirmar Frete",
             "Distância: " + (distance ? distance : 1).toFixed(1) + "km\n" +
             "Preço: R$" + (veiculoSelecionado?.fixedPrice + (veiculoSelecionado?.variablePrice * (distance ? distance : 1))).toFixed(2),
             [
-                { text: "Cancelar", style: "cancel" },
                 { text: "Confirmar", onPress: ProvConfirmFrete },
+                { text: "Cancelar", style: "cancel" },
             ]
         )
     }
@@ -117,8 +171,8 @@ export default function FreteView() {
             "Iniciar viagem",
             "Estamos com a carga! Podemos partir?",
             [
-                { text: "Cancelar", style: "cancel" },
                 { text: "Confirmar", onPress: ProvBeginFrete },
+                { text: "Cancelar", style: "cancel" },
             ]
         )
     }
@@ -148,10 +202,22 @@ export default function FreteView() {
                     onDistanceChange={setDistance}
                 />
             </View>
-            {price !== null && (
+            {price !== '' && (
                 <View style={styles.infoContainer}>
+                    <View style={styles.infoRow}>
                     <Text style={styles.priceLabel}>Preço do Frete: R$</Text>
                     <Text style={styles.priceText}>{price}</Text>
+                    </View>
+
+                    <View style={styles.infoRow}>
+                    <Text style={styles.priceLabel}>Telefone: </Text>
+                    {user?.uType === 'prov' ? (
+                        <Text style={styles.priceText}>{celNumbCli}</Text>
+                    ) : (
+                        <Text style={styles.priceText}>{celNumbProv}</Text>
+                    )}
+                    </View>
+
                 </View>
             )}
             <View style={styles.buttonContainer}>
@@ -166,6 +232,13 @@ export default function FreteView() {
                     </TouchableOpacity>
                 )}
 
+                {/*PROVEDOR CANCELA FRETE*/}
+                {user?.uType === 'prov' && status === 'ok' && (
+                    <TouchableOpacity style={[styles.button, styles.confirmButton]} onPress={handleProvCancelFrete}>
+                        <Text style={styles.confirmButtonText}>Cancelar Frete</Text>
+                    </TouchableOpacity>
+                )}
+
                 {/*PROVEDOR INICIA VIAGEM ORIGEM -> DESTINO*/}
                 {user?.uType === 'prov' && status === 'ok' && (
                     <TouchableOpacity style={[styles.button, styles.routeButton]} onPress={handleBeginFrete}>
@@ -174,7 +247,7 @@ export default function FreteView() {
                 )}
 
                 {/*CLIENTE CANCELA FRETE*/}
-                {user?.uType === 'cli' && status !== 'cancel' && status !== 'overdue' && status !== 'closed' && status !== 'route' &&(
+                {user?.uType === 'cli' && status !== 'cancel' && status !== 'overdue' && status !== 'closed' && status !== 'route' && (
                     <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={handleCancelFrete}>
                         <Text style={styles.confirmButtonText}>Cancelar Frete</Text>
                     </TouchableOpacity>
@@ -182,7 +255,7 @@ export default function FreteView() {
 
                 {/*CLIENTE CONFIRMA CONCLUSAO FRETE*/}
                 {user?.uType === 'cli' && status === 'route' && (
-                    <TouchableOpacity style={[styles.button, styles.confirmButton]} onPress={()=>{console.log('foicarai')}}>
+                    <TouchableOpacity style={[styles.button, styles.confirmButton]} onPress={handleCloseFrete}>
                         <Text style={styles.confirmButtonText}>Confirmar Entrega</Text>
                     </TouchableOpacity>
                 )}
@@ -205,12 +278,15 @@ const styles = StyleSheet.create({
         borderWidth: 3,
     },
     infoContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
         marginTop: 10,
         borderRadius: 10,
         borderColor: '#ccc',
         borderWidth: 2,
+    },
+    infoRow:{
+        marginBottom: 5,
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     buttonContainer: {
         flexDirection: 'row',

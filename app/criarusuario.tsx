@@ -4,7 +4,7 @@ import { router, useLocalSearchParams } from "expo-router"
 import { newUserCli, newUserProv } from "@/components/login-functions/create-user"
 
 export default function CriarUsuario() {
-    const { uid, email, existingUType, targetUType, name, cpf, cnh } = useLocalSearchParams()
+    const { uid, email, existingUType, targetUType, name, cpf, cnh, celNumb } = useLocalSearchParams()
     const [loading, setLoading] = useState(false)
 
     const [formData, setFormData] = useState({
@@ -12,6 +12,7 @@ export default function CriarUsuario() {
         name: name?.toString() || "",
         email: email?.toString() || "",
         cpf: cpf?.toString() || "",
+        celNumb: celNumb?.toString() || "",
     })
     const [cnhData, setCnhData] = useState({
         cnh: cnh?.toString() || ""
@@ -25,49 +26,43 @@ export default function CriarUsuario() {
     }
 
     const handleSubmit = async () => {
-        if (targetUType === 'prov') {
-            if (formData.cpf === '' || formData.email === '' || formData.name === '' || cnhData.cnh === '' || formData.uid === '') {
-                alert('Todos os campos devem ser preenchidos!')
+        const requiredFields = [formData.cpf, formData.email, formData.name, formData.uid, formData.celNumb]
+        const hasEmpty = requiredFields.some(field => field.trim() === "")
+        const isProv = targetUType === 'prov'
+
+        if (hasEmpty || (isProv && cnhData.cnh.trim() === "")) {
+            alert('Todos os campos devem ser preenchidos!')
+            return
+        }
+
+        if (loading) return;
+        setLoading(true);
+        try {
+            if (isProv) {
+                await newUserProv({
+                    uid: formData.uid,
+                    cpf: formData.cpf,
+                    email: formData.email,
+                    name: formData.name,
+                    cnh: cnhData.cnh,
+                    celNumb: formData.celNumb,
+                })
+                alert("Provedor criado com sucesso!")
             } else {
-                if (loading) return;
-                setLoading(true);
-                try {
-                    await newUserProv({
-                        uid: formData.uid,
-                        cpf: formData.cpf,
-                        email: formData.email,
-                        name: formData.name,
-                        cnh: cnhData.cnh,
-                    })
-                    alert("Provedor criado com sucesso!")
-                    router.back()
-                } catch (e) {
-                    alert("Erro ao criar provedor.")
-                } finally {
-                    setLoading(false)
-                }
+                await newUserCli({
+                    uid: formData.uid,
+                    cpf: formData.cpf,
+                    email: formData.email,
+                    name: formData.name,
+                    celNumb: formData.celNumb,
+                })
+                alert("Cliente criado com sucesso!")
             }
-        } else {
-            if (formData.cpf === '' || formData.email === '' || formData.name === '' || formData.uid === '') {
-                alert('Todos os campos devem ser preenchidos!')
-            } else {
-                if (loading) return;
-                setLoading(true);
-                try {
-                    await newUserCli({
-                        uid: formData.uid,
-                        cpf: formData.cpf,
-                        email: formData.email,
-                        name: formData.name,
-                    })
-                    alert("Cliente criado com sucesso!")
-                    router.back()
-                } catch (e) {
-                    alert("Erro ao criar cliente.")
-                } finally {
-                    setLoading(false)
-                }
-            }
+            router.back()
+        } catch (e) {
+            alert("Erro ao criar usuário.")
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -100,16 +95,27 @@ export default function CriarUsuario() {
                 placeholder="Digite seu CPF"
                 keyboardType="numeric"
             />
-            {targetUType === 'prov' && (<>
-                <Text style={styles.label}>CNH</Text>
-                <TextInput
-                    style={styles.input}
-                    value={cnhData.cnh}
-                    onChangeText={(text) => handleCnhChange("cnh", text)}
-                    placeholder="Digite sua CNH"
-                    keyboardType="numeric"
-                />
-            </>
+
+            <Text style={styles.label}>Telefone</Text>
+            <TextInput
+                style={styles.input}
+                value={formData.celNumb}
+                onChangeText={(text) => handleChange("celNumb", text)}
+                placeholder="Digite seu telefone"
+                keyboardType="phone-pad"
+            />
+
+            {targetUType === 'prov' && (
+                <>
+                    <Text style={styles.label}>CNH</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={cnhData.cnh}
+                        onChangeText={(text) => handleCnhChange("cnh", text)}
+                        placeholder="Digite sua CNH"
+                        keyboardType="numeric"
+                    />
+                </>
             )}
 
             <Pressable style={styles.backButton} onPress={handleSubmit}>

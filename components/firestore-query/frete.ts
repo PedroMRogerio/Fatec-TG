@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where, doc, updateDoc, orderBy } from 'firebase/firestore'
+import { collection, getDocs, query, where, doc, updateDoc, orderBy, deleteField } from 'firebase/firestore'
 import { db } from '@/helpers/firebaseConfig'
 
 const colRef = collection(db, 'Frete')
@@ -69,10 +69,27 @@ export default class FreteQuery {
   static async ConfirmFreteProv(freteId: string, uidProv: string, plate: string, price: number) {
     try {
       const freteDoc = doc(db, 'Frete', freteId)
-      await updateDoc(freteDoc, { uidProv, plate, price, status:'ok'})
+      await updateDoc(freteDoc, { uidProv, plate, price, status: 'ok' })
       //console.log(`Status do frete ${freteId} atualizado para ${status}`)
     } catch (error) {
       console.error(`Erro ao atualizar status do frete ${freteId}:`, error)
+    }
+  }
+  static async CancelFreteProv(freteId: string) {
+    try {
+      const freteRef = doc(db, "Frete", freteId);
+
+      await updateDoc(freteRef, {
+        status: "open",
+        plate: deleteField(),
+        price: deleteField(),
+        uidProv: deleteField(),
+        celProv: deleteField(),
+      });
+
+    } catch (error) {
+      console.error("Erro ao reabrir frete:", error);
+      throw error;
     }
   }
 }
