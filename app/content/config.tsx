@@ -5,11 +5,13 @@ import { signOutUser } from "@/components/login-functions/logout";
 import { useUser } from "@/contexts/userContext";
 import { auth } from "@/helpers/firebaseConfig";
 import { sendPasswordResetEmail } from "firebase/auth";
+import { clientStyle, providerStyle } from "@/components/styles/PageStyles"
 
 export default function Config() {
   const router = useRouter();
-  const { setUser } = useUser();
+  const { user, setUser } = useUser();
   const [loading, setLoading] = useState(false)
+  const userStyle = user?.uType==='prov'? providerStyle : clientStyle
 
   const handleSignOut = async () => {
     if (loading) return;
@@ -44,7 +46,7 @@ export default function Config() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, userStyle.container]}>
       <Text style={styles.title}>Configurações</Text>
 
       <View style={styles.buttonContainer}>
@@ -56,9 +58,9 @@ export default function Config() {
           <Text style={styles.outButtonText}>Sair da Conta</Text>
         </Pressable>
 
-        <Pressable style={styles.backButton} onPress={() => router.back()}>
+        {/*<Pressable style={styles.backButton} onPress={() => router.back()}>
           <Text style={styles.backButtonText}>Voltar</Text>
-        </Pressable>
+        </Pressable>*/}
       </View>
     </View>
   );

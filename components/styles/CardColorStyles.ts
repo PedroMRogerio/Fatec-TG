@@ -3,16 +3,18 @@ import { StyleSheet, Dimensions } from 'react-native';
 const { width } = Dimensions.get("window");
 
 export const TAG_CLOSED: [string, string, ...string[]] = ['#ccc', 'transparent', 'transparent', '#ccc']
-export const TAG_OK: [string, string, ...string[]] = ['#88E788', 'transparent', 'transparent', '#88E788']
+export const TAG_OK: [string, string, ...string[]] = ['#0050E5', 'transparent', 'transparent', '#0050E5']
 export const TAG_OPEN: [string, string, ...string[]] = ['#f5c345', 'transparent', 'transparent', '#f5c345']
 export const TAG_CANCEL: [string, string, ...string[]] = ['#E83256', 'transparent', 'transparent', '#E83256']
 export const TAG_OVERDUE: [string, string, ...string[]] = ['#E83256', 'transparent', 'transparent', '#E83256']
+export const TAG_ROUTE: [string, string, ...string[]] = ['#88E788', 'transparent', 'transparent', '#88E788']
 
 export const TAG_CLOSED2: [string, string, ...string[]] = ['#ccc', 'white', 'white', '#ccc']
-export const TAG_OK2: [string, string, ...string[]] = ['#88E788', 'white', 'white', '#88E788']
+export const TAG_OK2: [string, string, ...string[]] = ['#0050E5', 'white', 'white', '#0050E5']
 export const TAG_OPEN2: [string, string, ...string[]] = ['#f5c345', 'white', 'white', '#f5c345']
 export const TAG_CANCEL2: [string, string, ...string[]] = ['#E83256', 'white', 'white', '#E83256']
 export const TAG_OVERDUE2: [string, string, ...string[]] = ['#E83256', 'white', 'white', '#E83256']
+export const TAG_ROUTE2: [string, string, ...string[]] = ['#88E788', 'white', 'white', '#88E788']
 
 export const freteCardsStyle = StyleSheet.create({
     container: {

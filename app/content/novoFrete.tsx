@@ -2,10 +2,14 @@ import NovoFreteForm from "@/components/frete/novoFreteForm";
 import { router } from "expo-router";
 import React from "react";
 import { View, StyleSheet, Pressable, Text, ScrollView } from "react-native";
+import { clientStyle, providerStyle } from "@/components/styles/PageStyles"
+import { useUser } from "@/contexts/userContext";
 
 export default function NovoFrete() {
+    const { user } = useUser()
+    const userStyle = user?.uType==='prov'? providerStyle : clientStyle
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, userStyle.container]}>
             <NovoFreteForm />
             <Pressable style={styles.backButton} onPress={() => router.back()}>
                 <Text style={styles.backButtonText}>Voltar</Text>

@@ -1,52 +1,54 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
-import { useUser } from "@/contexts/userContext";
-import VehicleQuery from "@/components/firestore-query/vehicle";
-import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react"
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native"
+import { useUser } from "@/contexts/userContext"
+import VehicleQuery from "@/components/firestore-query/vehicle"
+import { useRouter } from "expo-router"
+import { clientStyle, providerStyle } from "@/components/styles/PageStyles"
 
 interface IVehicle {
-    id: string;
-    [key: string]: any;
+    id: string
+    [key: string]: any
 }
 
 export default function Usuario() {
-    const { user } = useUser();
-    const [vehicles, setVehicles] = useState<IVehicle[]>([]);
-    const router = useRouter();
+    const { user } = useUser()
+    const [vehicles, setVehicles] = useState<IVehicle[]>([])
+    const router = useRouter()
+    const userStyle = user?.uType==='prov'? providerStyle : clientStyle
 
     function vType(type: string) {
         switch (type) {
             case "large":
-                return "Grande";
+                return "Grande"
             case "medium":
-                return "Médio";
+                return "Médio"
             case "small":
-                return "Pequeno";
+                return "Pequeno"
             default:
-                return "???";
+                return "???"
         }
     }
 
     useEffect(() => {
         const fetchVehicles = async () => {
             if (user?.uid) {
-                const result = await VehicleQuery.getVehicle(user.uid);
-                setVehicles(result);
+                const result = await VehicleQuery.getVehicle(user.uid)
+                setVehicles(result)
             }
-        };
-        fetchVehicles();
-    }, [user]);
+        }
+        fetchVehicles()
+    }, [user])
 
     if (!user) {
         return (
-            <View style={styles.container}>
+            <View style={[styles.container, userStyle.container]}>
                 <Text style={styles.error}>Usuário não encontrado no contexto.</Text>
             </View>
-        );
+        )
     }
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView contentContainerStyle={[styles.container, userStyle.container]}>
             <Text style={styles.title}>Informações do Usuário</Text>
 
             <View style={styles.infoBlock}>
@@ -58,6 +60,9 @@ export default function Usuario() {
 
                 <Text style={styles.label}>CPF:</Text>
                 <Text style={styles.value}>{user.cpf}</Text>
+
+                <Text style={styles.label}>Telefone:</Text>
+                <Text style={styles.value}>{user.celNumb}</Text>
 
                 {user.uType === 'prov' && (
                     <>
@@ -76,7 +81,7 @@ export default function Usuario() {
                                 style={styles.vehicleCard}
                                 onPress={() =>
                                     router.push({
-                                        pathname: "/editarVeiculo",
+                                        pathname: "/content/editarVeiculo",
                                         params: { ...vehicle },
                                     })
                                 }
@@ -91,23 +96,22 @@ export default function Usuario() {
                     ) : (
                         <Text style={styles.value}>Nenhum veículo encontrado.</Text>
                     )}
-                    <Pressable style={styles.backButton} onPress={() => router.push({pathname:'/criarVeiculo'})}>
-                        <Text style={styles.backButtonText}>Adicionar Veículo</Text>
+                    <Pressable style={[styles.backButton, {marginBottom:80,}]} onPress={() => router.push({pathname:'/content/criarVeiculo'})}>
+                        <Text style={styles.backButtonText}>Cadastrar Veículo</Text>
                     </Pressable>
 
                 </View>
             )}
-            <Pressable style={styles.backButton} onPress={() => router.back()}>
+            {/*<Pressable style={styles.backButton} onPress={() => router.back()}>
                 <Text style={styles.backButtonText}>Voltar</Text>
-            </Pressable>
+            </Pressable>*/}
         </ScrollView>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
     container: {
         padding: 20,
-        backgroundColor: "#fff",
         flexGrow: 1,
     },
     title: {
@@ -124,7 +128,7 @@ const styles = StyleSheet.create({
     infoBlock: {
         borderWidth: 0.3,
         borderColor: '#808080',
-        backgroundColor: "#f2f2f2",
+        backgroundColor: "white",
         padding: 15,
         borderRadius: 8,
     },
@@ -140,6 +144,7 @@ const styles = StyleSheet.create({
     vehicleCard: {
         borderWidth: 0.3,
         borderColor: '#808080',
+        backgroundColor: "#f8f8f8",
         padding: 12,
         borderRadius: 6,
         marginBottom: 10,
@@ -150,9 +155,11 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     backButton: {
+        borderWidth: 0.3,
+        borderColor: '#808080',
         marginTop: 20,
         padding: 12,
-        backgroundColor: "#ccc",
+        backgroundColor: "#f8f8f8",
         borderRadius: 6,
         alignItems: "center",
     },
@@ -161,4 +168,4 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#333",
     },
-});
+})

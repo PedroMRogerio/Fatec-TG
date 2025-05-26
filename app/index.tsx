@@ -27,7 +27,7 @@ export default function Index() {
 
       if (user) {
         setUser({ uid, email, uType: 'cli', ...user });
-        router.push('/home');
+        router.push('/content/home');
       } else {
         const provUser = await UserProvQuery.getUser(uid) as UserData
         if (provUser) {
@@ -70,7 +70,7 @@ export default function Index() {
 
       if (user) {
         setUser({ uid, email, uType: 'prov', ...user });
-        router.push('/home');
+        router.push('/content/home');
       } else {
         const cliUser = await UserCliQuery.getUser(uid) as UserData
         if (cliUser) {
@@ -107,7 +107,7 @@ export default function Index() {
 
   return (
     <View style={styles.view}>
-      <Image source={require('@/assets/images/teste.png')} style={{ alignSelf: 'center', height: 75, width: 75 }} />
+      <Image source={require('@/assets/images/logo.png')} style={{ alignSelf: 'center', height: 75, width: 75 }} />
       <View>
         <Text style={styles.titulo}>Faça o login para continuar</Text>
         <Text style={styles.texto}>Login</Text>

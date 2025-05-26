@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where, doc, updateDoc, orderBy } from 'firebase/firestore'
+import { collection, getDocs, query, where, doc, updateDoc, orderBy, deleteField } from 'firebase/firestore'
 import { db } from '@/helpers/firebaseConfig'
 
 const colRef = collection(db, 'Frete')
@@ -30,8 +30,21 @@ export default class FreteQuery {
     return doc
   }
 
-  static async getFreteAll() {
-    const q = query(colRef, where('status', '==', 'open'))
+  static async getFreteAll(type: string) {
+    let q
+    switch (type) {
+      case 'large':
+        q = query(colRef, where('status', '==', 'open'))
+        break
+      case 'medium':
+        q = query(colRef, where('status', '==', 'open'), where('type', 'in', ['small', 'medium']))
+        break
+      case 'small':
+        q = query(colRef, where('status', '==', 'open'), where('type', '==', 'small'))
+        break
+      default:
+        q = query(colRef, where('status', '==', 'open'))
+    }
     const snapshot = await getDocs(q)
     if (snapshot.empty) return []
 
@@ -44,12 +57,39 @@ export default class FreteQuery {
   }
 
   static async updateFreteStatus(freteId: string, status: string) {
-  try {
-    const freteDoc = doc(db, 'Frete', freteId)
-    await updateDoc(freteDoc, { status })
-    console.log(`Status do frete ${freteId} atualizado para ${status}`)
-  } catch (error) {
-    console.error(`Erro ao atualizar status do frete ${freteId}:`, error)
+    try {
+      const freteDoc = doc(db, 'Frete', freteId)
+      await updateDoc(freteDoc, { status })
+      //console.log(`Status do frete ${freteId} atualizado para ${status}`)
+    } catch (error) {
+      console.error(`Erro ao atualizar status do frete ${freteId}:`, error)
+    }
   }
-}
+
+  static async ConfirmFreteProv(freteId: string, uidProv: string, plate: string, price: number) {
+    try {
+      const freteDoc = doc(db, 'Frete', freteId)
+      await updateDoc(freteDoc, { uidProv, plate, price, status: 'ok' })
+      //console.log(`Status do frete ${freteId} atualizado para ${status}`)
+    } catch (error) {
+      console.error(`Erro ao atualizar status do frete ${freteId}:`, error)
+    }
+  }
+  static async CancelFreteProv(freteId: string) {
+    try {
+      const freteRef = doc(db, "Frete", freteId);
+
+      await updateDoc(freteRef, {
+        status: "open",
+        plate: deleteField(),
+        price: deleteField(),
+        uidProv: deleteField(),
+        celProv: deleteField(),
+      });
+
+    } catch (error) {
+      console.error("Erro ao reabrir frete:", error);
+      throw error;
+    }
+  }
 }

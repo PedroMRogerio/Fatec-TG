@@ -17,6 +17,7 @@ export interface NewUserCliProps {
   name: string
   cpf: string
   email: string
+  celNumb: string
 }
 export interface NewUserProvProps {
   uid: string
@@ -24,9 +25,10 @@ export interface NewUserProvProps {
   cpf: string
   email: string
   cnh: string
+  celNumb: string
 }
 
-export async function newUserCli({ uid, name, cpf, email }: NewUserCliProps): Promise<void> {
+export async function newUserCli({ uid, name, cpf, email, celNumb }: NewUserCliProps): Promise<void> {
   try {
     const usersCollection = collection(db, "UserCli")
 
@@ -35,6 +37,7 @@ export async function newUserCli({ uid, name, cpf, email }: NewUserCliProps): Pr
       name,
       cpf,
       email,
+      celNumb,
     })
 
     console.log("Novo cliente criado com sucesso!")
@@ -44,7 +47,7 @@ export async function newUserCli({ uid, name, cpf, email }: NewUserCliProps): Pr
   }
 }
 
-export async function newUserProv({ uid, name, cpf, email, cnh }: NewUserProvProps): Promise<void> {
+export async function newUserProv({ uid, name, cpf, email, cnh, celNumb }: NewUserProvProps): Promise<void> {
   try {
     const usersCollection = collection(db, "UserProv")
 
@@ -53,7 +56,8 @@ export async function newUserProv({ uid, name, cpf, email, cnh }: NewUserProvPro
       name,
       cpf,
       email,
-      cnh
+      cnh,
+      celNumb,
     })
 
     console.log("Novo cliente criado com sucesso!")
