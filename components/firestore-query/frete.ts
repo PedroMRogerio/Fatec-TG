@@ -37,10 +37,10 @@ export default class FreteQuery {
         q = query(colRef, where('status', '==', 'open'))
         break
       case 'medium':
-        q = query(colRef, where('status', '==', 'open'), where('status', 'in', ['small', 'medium']))
+        q = query(colRef, where('status', '==', 'open'), where('type', 'in', ['small', 'medium']))
         break
       case 'small':
-        q = query(colRef, where('status', '==', 'open'), where('status', '==', 'small'))
+        q = query(colRef, where('status', '==', 'open'), where('type', '==', 'small'))
         break
       default:
         q = query(colRef, where('status', '==', 'open'))

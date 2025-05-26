@@ -1,10 +1,12 @@
 import RouteMap from "@/components/maps/route-map"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Dimensions, Alert } from "react-native"
 import { useLocalSearchParams, useRouter } from "expo-router"
 import { IAddress } from "@/components/interfaces/schedule"
 import { useUser } from "@/contexts/userContext"
 import FreteQuery from "@/components/firestore-query/frete"
+import UserCliQuery from "@/components/firestore-query/userCli"
+import UserProvQuery from "@/components/firestore-query/userProv"
 
 export default function FreteView() {
     const params = useLocalSearchParams()
@@ -13,13 +15,14 @@ export default function FreteView() {
     const [loading, setLoading] = useState(false)
     const [distance, setDistance] = useState<number | null>(null)
 
+    const [getUser, setGetUser] = useState<IUser | null>(null)
+
     const id = typeof params.id === 'string' ? params.id : ''
     const status = typeof params.status === 'string' ? params.status : ''
     const dateString = typeof params.date === 'string' ? params.date : ''
     const date = dateString ? new Date(dateString) : undefined
     const price = typeof params.price === 'string' ? params.price : ''
-    const celNumbProv = typeof params.celNumbProv === 'string' ? params.celNumbProv : ''
-    const celNumbCli = typeof params.celNumbCli === 'string' ? params.celNumbCli : ''
+    const uid = typeof params.uid === 'string' ? params.uid : ''
 
 
     const org = typeof params.org === 'string' ? params.org.split(',') : []
@@ -41,6 +44,11 @@ export default function FreteView() {
         [key: string]: any
     }
 
+    interface IUser {
+        id: string
+        [key: string]: any
+    }
+
     let veiculoSelecionado: IVeiculo | null = null
     try {
         if (typeof params.veiculoSelecionado === 'string') {
@@ -58,7 +66,22 @@ export default function FreteView() {
     }
 
     const { height } = Dimensions.get('window')
-    const mapHeight = height * 0.65
+    const mapHeight = height * 0.555
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            let results
+            try {
+                if (user?.uType === 'prov') results = await UserCliQuery.getUser(uid)//VehicleQuery.getVehicle(user.uid)
+                else results = await UserProvQuery.getUser(uid)
+                setGetUser(results)
+            } catch (err) {
+                console.error("Erro ao buscar veículos:", err)
+            }
+        }
+
+        fetchUserData()
+    }, [])
 
 
     const handleCloseFrete = () => {
@@ -202,28 +225,36 @@ export default function FreteView() {
                     onDistanceChange={setDistance}
                 />
             </View>
-            {price !== '' && (
+            {(price !== '' || user?.uType === 'prov') && (
                 <View style={styles.infoContainer}>
+                    {user?.uType !== 'prov' && (
+                        <View style={styles.infoRow}>
+                            <Text style={styles.priceLabel}>Preço do Frete: R$</Text>
+                            <Text style={styles.priceText}>{price}</Text>
+                        </View>
+                    )}
+
                     <View style={styles.infoRow}>
-                    <Text style={styles.priceLabel}>Preço do Frete: R$</Text>
-                    <Text style={styles.priceText}>{price}</Text>
+                        <Text style={styles.priceLabel}>Data: </Text>
+                        <Text style={styles.priceText}>
+                            {date ? date.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : ''}
+                        </Text>
+
                     </View>
 
                     <View style={styles.infoRow}>
-                    <Text style={styles.priceLabel}>Telefone: </Text>
-                    {user?.uType === 'prov' ? (
-                        <Text style={styles.priceText}>{celNumbCli}</Text>
-                    ) : (
-                        <Text style={styles.priceText}>{celNumbProv}</Text>
-                    )}
+                        <Text style={styles.priceLabel}>Nome: </Text>
+                        <Text style={styles.priceText}>{getUser?.name}</Text>
+                    </View>
+
+                    <View style={styles.infoRow}>
+                        <Text style={styles.priceLabel}>Telefone: </Text>
+                        <Text style={styles.priceText}>{getUser?.celNumb}</Text>
                     </View>
 
                 </View>
             )}
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={[styles.button, styles.backButton]} onPress={() => { router.back() }}>
-                    <Text style={styles.backButtonText}>Voltar</Text>
-                </TouchableOpacity>
 
                 {/*PROVEDOR ACEITA FRETE*/}
                 {user?.uType === 'prov' && status === 'open' && (
@@ -283,7 +314,7 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderWidth: 2,
     },
-    infoRow:{
+    infoRow: {
         marginBottom: 5,
         flexDirection: 'row',
         alignItems: 'center',

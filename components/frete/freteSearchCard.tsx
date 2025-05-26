@@ -147,7 +147,7 @@ export function FreteSearchCard() {
                             pathname: "/content/frete-view",
                             params: {
                                 ...frete,
-                                date: frete.date?.toDate().toISOString(), // transforma Timestamp em string
+                                date: frete.date?.toDate().toISOString(),
                                 veiculoSelecionado: JSON.stringify(selectedVehicle),
                             },
                         })
