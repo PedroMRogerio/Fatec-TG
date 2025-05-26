@@ -7,6 +7,7 @@ import { useUser } from "@/contexts/userContext"
 import FreteQuery from "@/components/firestore-query/frete"
 import UserCliQuery from "@/components/firestore-query/userCli"
 import UserProvQuery from "@/components/firestore-query/userProv"
+import { clientStyle, providerStyle } from "@/components/styles/PageStyles"
 
 export default function FreteView() {
     const params = useLocalSearchParams()
@@ -14,13 +15,22 @@ export default function FreteView() {
     const { user } = useUser()
     const [loading, setLoading] = useState(false)
     const [distance, setDistance] = useState<number | null>(null)
+    const userStyle = user?.uType === 'prov' ? providerStyle : clientStyle
 
     const [getUser, setGetUser] = useState<IUser | null>(null)
 
     const id = typeof params.id === 'string' ? params.id : ''
     const status = typeof params.status === 'string' ? params.status : ''
-    const dateString = typeof params.date === 'string' ? params.date : ''
-    const date = dateString ? new Date(dateString) : undefined
+
+    let date: Date | undefined = undefined
+    if (typeof params.date === 'string') {
+        const match = params.date.match(/Timestamp\(seconds=(\d+), nanoseconds=\d+\)/)
+        if (match && match[1]) {
+            const seconds = Number(match[1])
+            date = new Date(seconds * 1000)
+        }
+    }
+
     const price = typeof params.price === 'string' ? params.price : ''
     const uid = typeof params.uid === 'string' ? params.uid : ''
 
@@ -217,7 +227,7 @@ export default function FreteView() {
 
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, userStyle.container]}>
             <View style={[styles.mapContainer, { height: mapHeight }]}>
                 <RouteMap
                     origin={origin}
@@ -291,6 +301,10 @@ export default function FreteView() {
                     </TouchableOpacity>
                 )}
 
+                {/*<TouchableOpacity style={[styles.button, styles.backButton]} onPress={() => console.log('params.date:', params.date)}>
+                    <Text style={styles.backButtonText}>Voltar</Text>
+                </TouchableOpacity>*/}
+
             </View>
         </SafeAreaView>
     )
@@ -312,6 +326,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         borderRadius: 10,
         borderColor: '#ccc',
+        backgroundColor: 'white',
         borderWidth: 2,
     },
     infoRow: {

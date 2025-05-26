@@ -11,10 +11,15 @@ import {
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/helpers/firebaseConfig";
 import { Picker } from "@react-native-picker/picker";
+import { clientStyle, providerStyle } from "@/components/styles/PageStyles"
+import { useUser } from "@/contexts/userContext";
 
 export default function EditarVeiculo() {
+  const { user } = useUser()
   const router = useRouter();
   const params = useLocalSearchParams();
+  const userStyle = user?.uType==='prov'? providerStyle : clientStyle
+
   const { id, plate, size, type, fixedPrice, variablePrice } = params as any;
   const [loading, setLoading] = useState(false)
 
@@ -57,7 +62,7 @@ export default function EditarVeiculo() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, userStyle.container]}>
       <Text style={styles.title}>Editar Veículo</Text>
 
       <Text style={styles.label}>Placa:</Text>
@@ -118,7 +123,6 @@ const styles = StyleSheet.create({
     padding: 20,
     borderWidth: 0.3,
     borderColor: '#808080',
-    backgroundColor: "#fff",
     flex: 1,
   },
   title: {
@@ -137,6 +141,7 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   input: {
+    backgroundColor:'#fff',
     borderWidth: 1,
     borderColor: "#ccc",
     padding: 8,
@@ -144,6 +149,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   pickerContainer: {
+    backgroundColor:'#fff',
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 6,

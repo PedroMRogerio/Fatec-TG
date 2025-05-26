@@ -4,10 +4,12 @@ import FreteCardList from "@/components/frete/freteCard"
 import ProvCardList from "@/components/frete/provCard"
 import { useFocusEffect } from "@react-navigation/native"
 import React, { useState, useCallback } from "react"
+import { clientStyle, providerStyle } from "@/components/styles/PageStyles"
 
 export default function Home() {
     const { user } = useUser()
     const [refreshKey, setRefreshKey] = useState(0)
+    const userStyle = user?.uType==='prov'? providerStyle : clientStyle
 
     useFocusEffect(
         useCallback(() => {
@@ -16,7 +18,7 @@ export default function Home() {
     )
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, userStyle.container]}>
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 <Text style={styles.titulo}>
                     Bem vindo{user?.name ? `, ${user.name}` : ' Usuário'}!
@@ -44,7 +46,6 @@ export const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: '#EBF5FF'
     },
     scrollContent: {
         padding: 10,

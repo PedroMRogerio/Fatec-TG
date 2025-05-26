@@ -7,7 +7,7 @@ import { getEndereco } from "@/components/maps/address-name"
 import { useRouter } from "expo-router"
 import { LinearGradient } from "expo-linear-gradient"
 import { CardColor, CardColor2 } from "./cardColor"
-import { freteCardsStyle } from "../styles/colorStyles"
+import { freteCardsStyle } from "../styles/CardColorStyles"
 
 const { width } = Dimensions.get("window")
 
