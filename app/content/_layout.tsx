@@ -1,5 +1,5 @@
-import { Stack, Link } from "expo-router";
-import { View, StyleSheet, Pressable, Image, Dimensions } from "react-native";
+import { Slot, Link, usePathname } from "expo-router";
+import { View, StyleSheet, Pressable, Image, Dimensions, Text } from "react-native";
 import { useUser } from "@/contexts/userContext";
 import React from "react";
 
@@ -7,6 +7,7 @@ import userButton from "@/assets/images/userButton.png";
 import newFreteButton from "@/assets/images/newFreteButton.png";
 import searchButton from "@/assets/images/searchButton.png"
 import configButton from "@/assets/images/configButton.png";
+import homeButton from "@/assets/images/homeButton.png"
 
 const { width } = Dimensions.get("window");
 
@@ -14,9 +15,12 @@ const { width } = Dimensions.get("window");
 
 export default function ContentLayout() {
   const { user } = useUser();
+  const pathname = usePathname();
+  const isHome = pathname === "/content/home";
+
   return (
     <>
-      <Stack screenOptions={{ headerShown: false }} />
+      <Slot />
       <View style={styles.view2}>
         <Link href="/content/usuario" asChild>
 
@@ -25,19 +29,36 @@ export default function ContentLayout() {
           </Pressable>
         </Link>
         {user?.uType === 'prov' && (
-          <Link href="/content/frete-buscar" asChild>
-            <Pressable style={styles.botoes2}>
-              <Image source={searchButton} style={styles.icon} />
-            </Pressable>
-          </Link>
+          isHome ? (
+            <Link href="/content/frete-buscar" asChild>
+              <Pressable style={styles.botoes2}>
+                <Image source={searchButton} style={styles.icon} />
+              </Pressable>
+            </Link>
+          ) : (
+            <Link href="/content/home" asChild>
+              <Pressable style={styles.botoes2}>
+                <Image source={homeButton} style={styles.icon} />
+              </Pressable>
+            </Link>
+          )
         )}
         {user?.uType === 'cli' && (
-          <Link href="/content/novoFrete" asChild>
-            <Pressable style={styles.botoes2}>
-              <Image source={newFreteButton} style={styles.icon} />
-            </Pressable>
-          </Link>
+          isHome ? (
+            <Link href="/content/novoFrete" asChild>
+              <Pressable style={styles.botoes2}>
+                <Image source={newFreteButton} style={styles.icon} />
+              </Pressable>
+            </Link>
+          ) : (
+            <Link href="/content/home" asChild>
+              <Pressable style={styles.botoes2}>
+                <Image source={homeButton} style={styles.icon} />
+              </Pressable>
+            </Link>
+          )
         )}
+
         <Link href="/content/config" asChild>
           <Pressable style={styles.botoes}>
             <Image source={configButton} style={styles.icon} />

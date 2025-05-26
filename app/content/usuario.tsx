@@ -92,7 +92,7 @@ export default function Usuario() {
                         <Text style={styles.value}>Nenhum veículo encontrado.</Text>
                     )}
                     <Pressable style={styles.backButton} onPress={() => router.push({pathname:'/content/criarVeiculo'})}>
-                        <Text style={styles.backButtonText}>Adicionar Veículo</Text>
+                        <Text style={styles.backButtonText}>Cadastrar Veículo</Text>
                     </Pressable>
 
                 </View>
