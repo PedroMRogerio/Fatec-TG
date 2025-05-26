@@ -33,6 +33,7 @@ export default function FreteView() {
 
     const price = typeof params.price === 'string' ? params.price : ''
     const uid = typeof params.uid === 'string' ? params.uid : ''
+    const uidProv = typeof params.uidProv === 'string' ? params.uidProv : ''
 
 
     const org = typeof params.org === 'string' ? params.org.split(',') : []
@@ -76,14 +77,14 @@ export default function FreteView() {
     }
 
     const { height } = Dimensions.get('window')
-    const mapHeight = height * 0.555
+    const mapHeight = height * 0.55
 
     useEffect(() => {
         const fetchUserData = async () => {
             let results
             try {
-                if (user?.uType === 'prov') results = await UserCliQuery.getUser(uid)//VehicleQuery.getVehicle(user.uid)
-                else results = await UserProvQuery.getUser(uid)
+                if (user?.uType === 'prov') {results = await UserCliQuery.getUser(uid)}
+                else {results = await UserProvQuery.getUser(uidProv)}
                 setGetUser(results)
             } catch (err) {
                 console.error("Erro ao buscar veículos:", err)

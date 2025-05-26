@@ -11,6 +11,7 @@ import { CardColor, CardColor2 } from "./cardColor"
 import { freteCardsStyle } from "../styles/CardColorStyles"
 import VehicleQuery from "@/components/firestore-query/vehicle"
 import { useUser } from "@/contexts/userContext"
+import { clientStyle, providerStyle } from "@/components/styles/PageStyles"
 
 const { width } = Dimensions.get("window")
 
@@ -32,7 +33,8 @@ export function FreteSearchCard() {
     const [selectedVehicle, setSelectedVehicle] = useState<VehicleItem | null>(null)
     const [vehicleLoading, setVehicleLoading] = useState(true)
     const router = useRouter()
-    const { user } = useUser() // pega o usuário logado
+    const { user } = useUser() 
+    const userStyle = user?.uType==='prov'? providerStyle : clientStyle
 
     useEffect(() => {
         const fetchVehicles = async () => {
@@ -116,7 +118,7 @@ export function FreteSearchCard() {
     }
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView contentContainerStyle={[styles.container, userStyle.container]}>
             <Text style={styles.label}>Selecione um veículo:</Text>
             <View style={styles.pickerContainer}>
                 <Picker
@@ -203,6 +205,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     pickerContainer: {
+        backgroundColor:'#fff',
         marginBottom: 20,
         borderColor: "#ccc",
         borderWidth: 1,

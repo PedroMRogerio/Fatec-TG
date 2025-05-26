@@ -198,7 +198,7 @@ export const styles = StyleSheet.create({
 
   },
   textoBotao: {
-    fontSize: 18,
+    fontSize: 16,
     textAlign: 'center',
     width: 75,
     borderRadius: 5,
