@@ -27,7 +27,7 @@ export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
     const [loading, setLoading] = useState(true)
     const router = useRouter()
 
-    function statusName(status:string){
+    function statusName(status: string) {
         switch (status) {
             case 'closed':
                 return 'Concluído'
@@ -39,6 +39,8 @@ export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
                 return 'Cancelado'
             case 'overdue':
                 return 'Vencido'
+            case 'route':
+                return 'A caminho'
             default:
                 return 'Indefinido'
         }
@@ -65,7 +67,7 @@ export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
 
                             const now = new Date()
 
-                            if (now > freteDate && frete.status !== 'overdue' && frete.status !== 'closed' && frete.status !== 'cancel') {
+                            if (now > freteDate && frete.status !== 'overdue' && frete.status !== 'closed' && frete.status !== 'cancel' && frete.status !== 'route') {
                                 updatedStatus = 'overdue'
                                 await FreteQuery.updateFreteStatus(frete.id, 'overdue')
                             }
@@ -77,7 +79,7 @@ export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
 
                 fretesComEndereco.sort((a, b) => {
                     const statusOrder = (status: string) => {
-                        if (status === 'ok' || status === 'open') return 1
+                        if (status === 'ok' || status === 'open' || status === 'route') return 1
                         return 0
                     }
 
@@ -146,7 +148,7 @@ export default function FreteCardList({ uid, refreshKey }: ProvCardListProps) {
                         />
                         <Text style={styles.title}>{frete.endereco}</Text>
                         <Text style={styles.date}>{formatDate(frete.date ? frete.date : '')}</Text>
-                        <Text style={[styles.date, {fontWeight:'bold'}]}>{statusName(frete.status)}</Text>
+                        <Text style={[styles.date, { fontWeight: 'bold' }]}>{statusName(frete.status)}</Text>
                     </View>
                 </Pressable>
             ))}

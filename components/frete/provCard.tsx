@@ -39,6 +39,8 @@ export default function ProvCardList({ uid, refreshKey }: ProvCardListProps) {
                 return 'Cancelado'
             case 'overdue':
                 return 'Vencido'
+            case 'route':
+                return 'A caminho'
             default:
                 return 'Indefinido'
         }
@@ -65,7 +67,7 @@ export default function ProvCardList({ uid, refreshKey }: ProvCardListProps) {
 
                             const now = new Date()
 
-                            if (now > freteDate && frete.status !== 'overdue' && frete.status !== 'closed' && frete.status !== 'cancel') {
+                            if (now > freteDate && frete.status !== 'overdue' && frete.status !== 'closed' && frete.status !== 'cancel' && frete.status !== 'route') {
                                 updatedStatus = 'overdue'
                                 await FreteQuery.updateFreteStatus(frete.id, 'overdue')
                             }
@@ -77,7 +79,7 @@ export default function ProvCardList({ uid, refreshKey }: ProvCardListProps) {
 
                 fretesComEndereco.sort((a, b) => {
                     const statusOrder = (status: string) => {
-                        if (status === 'ok' || status === 'open') return 1
+                        if (status === 'ok' || status === 'open' || status === 'route') return 1
                         return 0
                     }
 

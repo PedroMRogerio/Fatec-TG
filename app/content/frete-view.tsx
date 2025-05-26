@@ -127,6 +127,12 @@ export default function FreteView() {
                     </TouchableOpacity>
                 )}
 
+                {user?.uType === 'prov' && status === 'ok' && (
+                    <TouchableOpacity style={[styles.button, styles.routeButton]} onPress={() => console.log('começar viadage')}>
+                        <Text style={styles.confirmButtonText}>Iniciar Viagem</Text>
+                    </TouchableOpacity>
+                )}
+
                 {user?.uType === 'cli' && status !== 'cancel' && status !== 'overdue' && status !== 'closed' &&(
                     <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={CancelFrete}>
                         <Text style={styles.confirmButtonText}>Cancelar Frete</Text>
@@ -174,6 +180,9 @@ const styles = StyleSheet.create({
     },
     confirmButton: {
         backgroundColor: '#4CAF50',
+    },
+    routeButton: {
+        backgroundColor: '#0050E5',
     },
     cancelButton: {
         backgroundColor: '#E83256',
