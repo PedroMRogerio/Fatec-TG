@@ -8,8 +8,26 @@ import FreteQuery from "@/components/firestore-query/frete"
 import UserCliQuery from "@/components/firestore-query/userCli"
 import UserProvQuery from "@/components/firestore-query/userProv"
 import { clientStyle, providerStyle } from "@/components/styles/PageStyles"
+import { useProviderLocationListener } from '@/hooks/useProviderLocationListener';
+
 
 export default function FreteView() {
+    function ProviderLocation({ providerId }: { providerId: string }) {
+    const location = useProviderLocationListener(providerId);
+
+    if (!location) {
+        return <Text>Localização do provedor carregando...</Text>;
+    }
+
+    return (
+        <View style={{ padding: 10, backgroundColor: '#eee', marginVertical: 10, borderRadius: 8 }}>
+        <Text>Localização do Provedor:</Text>
+        <Text>Latitude: {location.latitude.toFixed(6)}</Text>
+        <Text>Longitude: {location.longitude.toFixed(6)}</Text>
+        </View>
+    );
+    }
+    
     const params = useLocalSearchParams()
     const router = useRouter()
     const { user } = useUser()
@@ -35,7 +53,8 @@ export default function FreteView() {
     const uid = typeof params.uid === 'string' ? params.uid : ''
     const uidProv = typeof params.uidProv === 'string' ? params.uidProv : ''
 
-
+    console.log('UID do provedor:', uidProv)
+    
     const org = typeof params.org === 'string' ? params.org.split(',') : []
     const dst = typeof params.dst === 'string' ? params.dst.split(',') : []
 
@@ -236,6 +255,7 @@ export default function FreteView() {
                     onDistanceChange={setDistance}
                 />
             </View>
+            {uidProv && <ProviderLocation providerId={uidProv} />}
             {(price !== '' || user?.uType === 'prov') && (
                 <View style={styles.infoContainer}>
                     {user?.uType !== 'prov' && (
