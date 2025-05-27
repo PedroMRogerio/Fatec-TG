@@ -82,18 +82,20 @@ export function FreteSearchCard() {
 
     function statusName(status: string) {
         switch (status) {
-            case "closed":
-                return "Concluído"
-            case "ok":
-                return "Preparado"
-            case "open":
-                return "Procurando provedor..."
-            case "cancel":
-                return "Cancelado"
-            case "overdue":
-                return "Vencido"
+            case 'closed':
+                return 'Concluído'
+            case 'ok':
+                return 'Preparado'
+            case 'open':
+                return 'Procurando provedor...'
+            case 'cancel':
+                return 'Cancelado'
+            case 'overdue':
+                return 'Vencido'
+            case 'route':
+                return 'A caminho'
             default:
-                return "Indefinido"
+                return 'Indefinido'
         }
     }
 
@@ -142,9 +144,7 @@ export function FreteSearchCard() {
             {loading && selectedVehicle && <ActivityIndicator style={{ marginTop: 20 }} />}
 
             {!loading && selectedVehicle && fretes.map((frete) => (
-                <Pressable
-                    key={frete.id}
-                    onPress={() =>
+                <Pressable key={frete.id} onPress={() =>
                         router.push({
                             pathname: "/content/frete-view",
                             params: {
