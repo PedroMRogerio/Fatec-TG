@@ -288,7 +288,7 @@ export default function FreteView() {
 
                 {/*PROVEDOR CANCELA FRETE*/}
                 {user?.uType === 'prov' && status === 'ok' && (
-                    <TouchableOpacity style={[styles.button, styles.confirmButton]} onPress={handleProvCancelFrete}>
+                    <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={handleProvCancelFrete}>
                         <Text style={styles.confirmButtonText}>Cancelar Frete</Text>
                     </TouchableOpacity>
                 )}
