@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "TG",
+    "name": "Fretege",
     "slug": "TG",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/logoapk.jpg",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -34,6 +34,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "78eb542b-5c71-4571-86cf-8b89cb50738b"
+      }
     }
   }
 }
