@@ -27,7 +27,7 @@ const RouteMap: React.FC<RouteMapProps> = ({
   providerId,
   onDistanceChange,
 }) => {
-  const mapRef = useRef<MapView>(null);
+  const mapRef = useRef<MapView | null>(null);
   const [distance, setDistance] = useState<number | null>(null);
   const [duration, setDuration] = useState<number | null>(null);
   const [originAddress, setOriginAddress] = useState<string>("Carregando endereço...");
@@ -60,7 +60,7 @@ const RouteMap: React.FC<RouteMapProps> = ({
   useEffect(() => {
     if (!providerId) return;
 
-    const unsub = onSnapshot(doc(db, "provider_locations", providerId), (docSnap) => {
+    const unsub = onSnapshot(doc(db, "locations", providerId), (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
         setProviderLocation({
@@ -82,80 +82,83 @@ const RouteMap: React.FC<RouteMapProps> = ({
   return (
     <View style={styles.container}>
       <MapView
-  ref={mapRef}
-  style={styles.map}
-  initialRegion={{
-    latitude: origin.lat,
-    longitude: origin.lng,
-    latitudeDelta: 0.05,
-    longitudeDelta: 0.05,
-  }}
->
-  {/* Origem e destino fixos */}
-  <Marker
-    coordinate={{ latitude: origin.lat, longitude: origin.lng }}
-    title="Origem"
-    description={originAddress}
-    pinColor={pinStyles.origin}
-  />
-  <Marker
-    coordinate={{ latitude: destination.lat, longitude: destination.lng }}
-    title="Destino"
-    description={destinationAddress}
-    pinColor={pinStyles.destiny}
-  />
-
-  {/* Provedor em tempo real */}
-  {providerLocation && (
-    <>
-      <Marker
-        coordinate={{
-          latitude: providerLocation.lat,
-          longitude: providerLocation.lng,
+        ref={mapRef}
+        style={styles.map}
+        initialRegion={{
+          latitude: origin.lat,
+          longitude: origin.lng,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
         }}
-        title="Provedor"
-        description="Localização atual"
-        pinColor={pinStyles.provider}
-      />
+      >
+        {/* Origem e destino fixos */}
+        <Marker
+          coordinate={{ latitude: origin.lat, longitude: origin.lng }}
+          title="Origem"
+          description={originAddress}
+          pinColor={pinStyles.origin}
+        />
+        <Marker
+          coordinate={{ latitude: destination.lat, longitude: destination.lng }}
+          title="Destino"
+          description={destinationAddress}
+          pinColor={pinStyles.destiny}
+        />
 
-      {/* Rota do provedor até o destino */}
-      <MapViewDirections
-        origin={{
-          latitude: providerLocation.lat,
-          longitude: providerLocation.lng,
-        }}
-        destination={{ latitude: destination.lat, longitude: destination.lng }}
-        apikey={GOOGLE_MAPS_API_KEY}
-        strokeWidth={3}
-        strokeColor="blue"
-        mode="DRIVING"
-        onReady={(result) => {
-          mapRef.current?.fitToCoordinates(result.coordinates, {
-            edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
-            animated: true,
-          });
-        }}
-      />
-    </>
-  )}
+        {/* Provedor em tempo real */}
+        {providerLocation && (
+          <>
+            <Marker
+              coordinate={{
+                latitude: providerLocation.lat,
+                longitude: providerLocation.lng,
+              }}
+              title="Provedor"
+              description="Localização atual"
+              pinColor={pinStyles.provider}
+            />
 
-  {/* Rota entre origem fixa e destino */}
-  <MapViewDirections
-    origin={{ latitude: origin.lat, longitude: origin.lng }}
-    destination={{ latitude: destination.lat, longitude: destination.lng }}
-    apikey={GOOGLE_MAPS_API_KEY}
-    strokeWidth={5}
-    mode="DRIVING"
-    strokeColor={trackStyles.history}
-    onReady={(result) => {
-      setDistance(result.distance);
-      setDuration(result.duration);
-      if (onDistanceChange) {
-        onDistanceChange(result.distance);
-      }
-    }}
-  />
-</MapView>
+            {/* Rota do provedor até a origem */}
+            <MapViewDirections
+              origin={{
+                latitude: providerLocation.lat,
+                longitude: providerLocation.lng,
+              }}
+              destination={{
+                latitude: origin.lat,
+                longitude: origin.lng,
+              }}
+              apikey={GOOGLE_MAPS_API_KEY}
+              strokeWidth={3}
+              strokeColor="blue"
+              mode="DRIVING"
+              onReady={(result) => {
+                mapRef.current?.fitToCoordinates(result.coordinates, {
+                  edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
+                  animated: true,
+                });
+              }}
+            />
+            
+            {/* Rota da origem até o destino */}
+            <MapViewDirections
+              origin={{ latitude: origin.lat, longitude: origin.lng }}
+              destination={{ latitude: destination.lat, longitude: destination.lng }}
+              apikey={GOOGLE_MAPS_API_KEY}
+              strokeWidth={5}
+              mode="DRIVING"
+              strokeColor={trackStyles.history}
+              onReady={(result) => {
+                setDistance(result.distance);
+                setDuration(result.duration);
+                if (onDistanceChange) {
+                  onDistanceChange(result.distance);
+                }
+              }}
+            />
+          </>
+        )}
+      </MapView>
 
       {distance && duration && (
         <View style={styles.infoBox}>
