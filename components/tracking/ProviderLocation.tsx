@@ -29,7 +29,7 @@ export const ProviderLocation = ({ providerId }: Props) => {
         },
         async (loc) => {
           setLocation(loc);
-          await setDoc(doc(db, "provider_locations", providerId), {
+          await setDoc(doc(db, "locations", providerId), {
             latitude: loc.coords.latitude,
             longitude: loc.coords.longitude,
             timestamp: new Date(),
