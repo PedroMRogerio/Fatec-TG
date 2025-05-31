@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         padding: 10,
         borderWidth: 1,
+        backgroundColor:'#fff',
         borderColor: "#ccc",
         borderRadius: 8,
         width: "30%",
@@ -176,7 +177,7 @@ const styles = StyleSheet.create({
     },
     dateButton: {
         padding: 10,
-        backgroundColor: "#f0f0f0",
+        backgroundColor: "#fff",
         borderRadius: 6,
         alignItems: "center",
     },
@@ -185,7 +186,7 @@ const styles = StyleSheet.create({
     },
     backButton: {
         padding: 12,
-        backgroundColor: "#ccc",
+        backgroundColor: "white",
         borderRadius: 6,
         alignItems: "center",
     },

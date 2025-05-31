@@ -26,10 +26,22 @@ export default function FreteView() {
     if (typeof params.date === 'string') {
         const match = params.date.match(/Timestamp\(seconds=(\d+), nanoseconds=\d+\)/);
         if (match && match[1]) {
-            const seconds = Number(match[1]);
-            date = new Date(seconds * 1000);
+            const seconds = Number(match[1])
+            date = new Date(seconds * 1000)
+        } else {
+            try {
+                const parsedDate = new Date(params.date)
+                if (!isNaN(parsedDate.getTime())) {
+                    date = parsedDate
+                } else {
+                    console.log('Formato de data inválido:', params.date)
+                }
+            } catch (error) {
+                console.log('Erro ao analisar a data:', error)
+            }
         }
     }
+    
 
     const price = typeof params.price === 'string' ? params.price : '';
     const uid = typeof params.uid === 'string' ? params.uid : '';
