@@ -226,6 +226,7 @@ export default function FreteView() {
                     origin={origin}
                     destination={destination}
                     providerId={uidProv}
+                    status={status}
                 />
             </View>
 

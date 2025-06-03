@@ -1,38 +1,40 @@
-import React, { useState, useEffect, useRef } from "react";
-import { View, StyleSheet, Text } from "react-native";
-import MapView, { Marker } from "react-native-maps";
-import MapViewDirections from "react-native-maps-directions";
-import { pinStyles, trackStyles } from "./styles";
-import { getEndereco } from "./address-name";
-import { db } from "@/helpers/firebaseConfig";
-import { doc, onSnapshot } from "firebase/firestore";
+import React, { useState, useEffect, useRef } from "react"
+import { View, StyleSheet, Text } from "react-native"
+import MapView, { Marker } from "react-native-maps"
+import MapViewDirections from "react-native-maps-directions"
+import { pinStyles, trackStyles } from "./styles"
+import { getEndereco } from "./address-name"
+import { db } from "@/helpers/firebaseConfig"
+import { doc, onSnapshot } from "firebase/firestore"
 
 interface Coordinates {
-  lat: number;
-  lng: number;
+  lat: number
+  lng: number
 }
 
 interface RouteMapProps {
-  origin: Coordinates;
-  destination: Coordinates;
-  providerId?: string; 
-  onDistanceChange?: (distance: number) => void;
+  origin: Coordinates
+  destination: Coordinates
+  providerId?: string 
+  status: string
+  onDistanceChange?: (distance: number) => void
 }
 
-const GOOGLE_MAPS_API_KEY = process.env.EXPO_PUBLIC_API_KEY ?? "";
+const GOOGLE_MAPS_API_KEY = process.env.EXPO_PUBLIC_API_KEY ?? ""
 
 const RouteMap: React.FC<RouteMapProps> = ({
   origin,
   destination,
   providerId,
+  status,
   onDistanceChange,
 }) => {
-  const mapRef = useRef<MapView | null>(null);
-  const [distance, setDistance] = useState<number | null>(null);
-  const [duration, setDuration] = useState<number | null>(null);
-  const [originAddress, setOriginAddress] = useState<string>("Carregando endereço...");
-  const [destinationAddress, setDestinationAddress] = useState<string>("Carregando endereço...");
-  const [providerLocation, setProviderLocation] = useState<Coordinates | null>(null);
+  const mapRef = useRef<MapView | null>(null)
+  const [distance, setDistance] = useState<number | null>(null)
+  const [duration, setDuration] = useState<number | null>(null)
+  const [originAddress, setOriginAddress] = useState<string>("Carregando endereço...")
+  const [destinationAddress, setDestinationAddress] = useState<string>("Carregando endereço...")
+  const [providerLocation, setProviderLocation] = useState<Coordinates | null>(null)
 
   // Validar chave da API
   if (!GOOGLE_MAPS_API_KEY) {
@@ -42,42 +44,42 @@ const RouteMap: React.FC<RouteMapProps> = ({
           Erro: Chave da API do Google Maps não configurada.
         </Text>
       </View>
-    );
+    )
   }
 
   // Buscar endereços
   useEffect(() => {
     getEndereco(origin.lat.toString(), origin.lng.toString())
       .then(setOriginAddress)
-      .catch(() => setOriginAddress("Erro ao obter endereço"));
+      .catch(() => setOriginAddress("Erro ao obter endereço"))
 
     getEndereco(destination.lat.toString(), destination.lng.toString())
       .then(setDestinationAddress)
-      .catch(() => setDestinationAddress("Erro ao obter endereço"));
-  }, [origin, destination]);
+      .catch(() => setDestinationAddress("Erro ao obter endereço"))
+  }, [origin, destination])
 
   // Escutar localização do provedor em tempo real
   useEffect(() => {
-    if (!providerId) return;
-
+    if (!providerId) return
+    //if (status !== 'route') return
     const unsub = onSnapshot(doc(db, "locations", providerId), (docSnap) => {
       if (docSnap.exists()) {
-        const data = docSnap.data();
+        const data = docSnap.data()
         setProviderLocation({
           lat: data.latitude,
           lng: data.longitude,
-        });
+        })
       }
-    });
+    })
 
-    return () => unsub();
-  }, [providerId]);
+    return () => unsub()
+  }, [providerId])
 
   const formatDuration = (totalMinutes: number) => {
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = Math.round(totalMinutes % 60);
-    return `${hours > 0 ? `${hours}h ` : ""}${minutes}m`;
-  };
+    const hours = Math.floor(totalMinutes / 60)
+    const minutes = Math.round(totalMinutes % 60)
+    return `${hours > 0 ? `${hours}h ` : ""}${minutes}m`
+  }
 
   return (
     <View style={styles.container}>
@@ -106,9 +108,8 @@ const RouteMap: React.FC<RouteMapProps> = ({
         />
 
         {/* Provedor em tempo real */}
-        {providerLocation && (
           <>
-            <Marker
+            {providerLocation && status === 'route' && (<Marker
               coordinate={{
                 latitude: providerLocation.lat,
                 longitude: providerLocation.lng,
@@ -117,9 +118,10 @@ const RouteMap: React.FC<RouteMapProps> = ({
               description="Localização atual"
               pinColor={pinStyles.provider}
             />
+            )}
 
             {/* Rota do provedor até a origem */}
-            <MapViewDirections
+            {providerLocation && status === 'route' && (<MapViewDirections
               origin={{
                 latitude: providerLocation.lat,
                 longitude: providerLocation.lng,
@@ -136,9 +138,9 @@ const RouteMap: React.FC<RouteMapProps> = ({
                 mapRef.current?.fitToCoordinates(result.coordinates, {
                   edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
                   animated: true,
-                });
+                })
               }}
-            />
+            />)}
             
             {/* Rota da origem até o destino */}
             <MapViewDirections
@@ -149,15 +151,14 @@ const RouteMap: React.FC<RouteMapProps> = ({
               mode="DRIVING"
               strokeColor={trackStyles.history}
               onReady={(result) => {
-                setDistance(result.distance);
-                setDuration(result.duration);
+                setDistance(result.distance)
+                setDuration(result.duration)
                 if (onDistanceChange) {
-                  onDistanceChange(result.distance);
+                  onDistanceChange(result.distance)
                 }
               }}
             />
           </>
-        )}
       </MapView>
 
       {distance && duration && (
@@ -167,14 +168,14 @@ const RouteMap: React.FC<RouteMapProps> = ({
         </View>
       )}
 
-      {!providerLocation && providerId && (
+      {!providerLocation && providerId && status === 'route' &&(
         <View style={[styles.infoBox, { top: 80 }]}>
           <Text style={{ color: "#555" }}>Aguardando localização do provedor...</Text>
         </View>
       )}
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
@@ -192,6 +193,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#333",
   },
-});
+})
 
-export default RouteMap;
+export default RouteMap
