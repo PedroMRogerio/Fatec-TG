@@ -41,7 +41,7 @@ export default function FreteView() {
             }
         }
     }
-    
+
 
     const price = typeof params.price === 'string' ? params.price : '';
     const uid = typeof params.uid === 'string' ? params.uid : '';
@@ -170,10 +170,11 @@ export default function FreteView() {
     }
 
     const handleConfirmFrete = () => {
+        console.log(distance)
         Alert.alert(
             "Confirmar Frete",
             "Distância: " + (distance || 1).toFixed(1) + "km\n" +
-            "Preço: R$" + (veiculoSelecionado?.fixedPrice + (veiculoSelecionado?.variablePrice * (distance || 1))).toFixed(2),
+            "Preço: R$" + (veiculoSelecionado?.fixedPrice + (veiculoSelecionado?.variablePrice * (distance ? distance : 1))).toFixed(2),
             [
                 { text: "Confirmar", onPress: ProvConfirmFrete },
                 { text: "Cancelar", style: "cancel" },
@@ -227,6 +228,8 @@ export default function FreteView() {
                     destination={destination}
                     providerId={uidProv}
                     status={status}
+                    distance={distance}
+                    setDistance={setDistance}
                 />
             </View>
 

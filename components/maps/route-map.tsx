@@ -15,8 +15,10 @@ interface Coordinates {
 interface RouteMapProps {
   origin: Coordinates
   destination: Coordinates
-  providerId?: string 
+  providerId?: string
   status: string
+  distance: number | null
+  setDistance: React.Dispatch<React.SetStateAction<number | null>>
   onDistanceChange?: (distance: number) => void
 }
 
@@ -27,10 +29,12 @@ const RouteMap: React.FC<RouteMapProps> = ({
   destination,
   providerId,
   status,
+  distance,
+  setDistance,
   onDistanceChange,
 }) => {
   const mapRef = useRef<MapView | null>(null)
-  const [distance, setDistance] = useState<number | null>(null)
+  //const [distance, setDistance] = useState<number | null>(null)
   const [duration, setDuration] = useState<number | null>(null)
   const [originAddress, setOriginAddress] = useState<string>("Carregando endereço...")
   const [destinationAddress, setDestinationAddress] = useState<string>("Carregando endereço...")
@@ -127,8 +131,8 @@ const RouteMap: React.FC<RouteMapProps> = ({
                 longitude: providerLocation.lng,
               }}
               destination={{
-                latitude: origin.lat,
-                longitude: origin.lng,
+                latitude: destination.lat,
+                longitude: destination.lng,
               }}
               apikey={GOOGLE_MAPS_API_KEY}
               strokeWidth={3}
