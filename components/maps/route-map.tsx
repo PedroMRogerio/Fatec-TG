@@ -124,7 +124,24 @@ const RouteMap: React.FC<RouteMapProps> = ({
             />
             )}
 
-            {/* Rota do provedor até a origem */}
+            {/* Rota da origem até o destino */}
+            <MapViewDirections
+              origin={{ latitude: origin.lat, longitude: origin.lng }}
+              destination={{ latitude: destination.lat, longitude: destination.lng }}
+              apikey={GOOGLE_MAPS_API_KEY}
+              strokeWidth={5}
+              mode="DRIVING"
+              strokeColor={trackStyles.history}
+              onReady={(result) => {
+                setDistance(result.distance)
+                setDuration(result.duration)
+                if (onDistanceChange) {
+                  onDistanceChange(result.distance)
+                }
+              }}
+            />
+
+            {/* Rota do provedor até o destino */}
             {providerLocation && status === 'route' && (<MapViewDirections
               origin={{
                 latitude: providerLocation.lat,
@@ -145,23 +162,6 @@ const RouteMap: React.FC<RouteMapProps> = ({
                 })
               }}
             />)}
-            
-            {/* Rota da origem até o destino */}
-            <MapViewDirections
-              origin={{ latitude: origin.lat, longitude: origin.lng }}
-              destination={{ latitude: destination.lat, longitude: destination.lng }}
-              apikey={GOOGLE_MAPS_API_KEY}
-              strokeWidth={5}
-              mode="DRIVING"
-              strokeColor={trackStyles.history}
-              onReady={(result) => {
-                setDistance(result.distance)
-                setDuration(result.duration)
-                if (onDistanceChange) {
-                  onDistanceChange(result.distance)
-                }
-              }}
-            />
           </>
       </MapView>
 
