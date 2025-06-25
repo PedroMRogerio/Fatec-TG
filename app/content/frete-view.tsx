@@ -170,7 +170,7 @@ export default function FreteView() {
     }
 
     const handleConfirmFrete = () => {
-        console.log(distance)
+        //console.log(distance)
         Alert.alert(
             "Confirmar Frete",
             "Distância: " + (distance || 1).toFixed(1) + "km\n" +
